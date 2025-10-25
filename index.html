@@ -512,7 +512,6 @@
             transition: var(--transition);
             background: var(--bg-white);
             position: relative;
-            overflow: hidden;
         }
 
         .ticket-item::before {
@@ -542,6 +541,8 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .ticket-subject {
@@ -1182,7 +1183,7 @@
             min-width: 180px;
             box-shadow: var(--shadow-lg);
             border-radius: var(--radius);
-            z-index: 10;
+            z-index: 1000; /* Исправление: увеличен z-index для выпадающих списков */
             border: 1px solid var(--border-color);
             margin-top: 8px;
             animation: fadeIn 0.2s ease-out;
@@ -1263,7 +1264,7 @@
             min-width: 160px;
             box-shadow: var(--shadow-lg);
             border-radius: var(--radius);
-            z-index: 10;
+            z-index: 1000; /* Исправление: увеличен z-index для выпадающих списков */
             border: 1px solid var(--border-color);
             margin-top: 8px;
             animation: fadeIn 0.2s ease-out;
@@ -1310,6 +1311,8 @@
             flex-direction: column;
             gap: 16px;
             max-height: calc(100vh - 400px);
+            /* Исправление: улучшение отображения сообщений */
+            min-height: 300px;
         }
 
         @media (max-width: 1024px) {
@@ -1387,10 +1390,30 @@
             text-align: left;
         }
 
+        .agent-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .date-header {
+            align-self: center;
+            background: transparent;
+            color: var(--text-light);
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            margin: 8px 0;
+        }
+
         .chat-input-container {
             padding: 20px;
             border-top: 1px solid var(--border-color);
             background: var(--bg-white);
+            /* Исправление: уменьшение отступов для экономии места */
+            padding-top: 16px;
+            padding-bottom: 16px;
         }
 
         .chat-input-row {
@@ -2329,6 +2352,1641 @@
                 width: 100%;
             }
         }
+
+        /* Исправления для горизонтальной ориентации на мобильных устройствах */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .tickets-container {
+                height: calc(100vh - 150px);
+            }
+            
+            .chat-messages {
+                max-height: calc(100vh - 300px);
+            }
+            
+            .chat-view-header {
+                padding: 12px;
+            }
+            
+            .chat-view-actions {
+                flex-wrap: nowrap;
+            }
+            
+            .mobile-header-actions {
+                flex-wrap: nowrap;
+            }
+            
+            .action-buttons-row {
+                flex-wrap: nowrap;
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                min-width: 120px;
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .close-chat-btn {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Исправление для приоритета высокий в дашборде */
+        .priority-high .ticket-subject {
+            color: white !important;
+        }
+
+        /* Анимация для уведомлений о прочтении */
+        @keyframes notificationSlide {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        .notification-toast {
+            position: fixed;
+            top: 100px;
+            right: 24px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: notificationSlide 0.3s ease-out;
+        }
+
+        .notification-toast.hidden {
+            display: none;
+        }
+
+        /* Адаптация для горизонтальной ориентации на мобильных устройствах - ОБРАЩЕНИЯ */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            /* Улучшение отображения чата в горизонтальной ориентации */
+            .ticket-chat-view.active {
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .chat-messages {
+                max-height: calc(100vh - 200px) !important;
+                padding: 12px;
+                overflow-y: auto;
+            }
+            
+            .message {
+                max-width: 90% !important;
+                padding: 10px 14px;
+            }
+            
+            .chat-input-container {
+                padding: 12px;
+                position: sticky;
+                bottom: 0;
+                background: var(--bg-white);
+                border-top: 1px solid var(--border-color);
+            }
+            
+            .chat-input-row {
+                gap: 8px;
+            }
+            
+            .chat-input {
+                min-height: 40px;
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+            
+            .send-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            
+            /* Улучшение отображения списка обращений */
+            .tickets-list {
+                max-height: calc(100vh - 150px);
+            }
+            
+            .ticket-chat-card {
+                padding: 12px;
+            }
+            
+            .chat-user-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .chat-user-name {
+                font-size: 14px;
+            }
+            
+            .chat-subject {
+                font-size: 13px;
+            }
+            
+            .chat-last-message {
+                font-size: 12px;
+                -webkit-line-clamp: 1;
+            }
+        }
+
+        /* Адаптация для горизонтальной ориентации на мобильных устройствах - ПОЛЬЗОВАТЕЛИ */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            /* Улучшение модального окна редактирования пользователя */
+            .edit-user-modal .modal {
+                max-height: 85vh;
+                overflow-y: auto;
+                margin: 10px;
+                padding: 16px;
+            }
+            
+            .edit-user-modal .modal-actions {
+                position: sticky;
+                bottom: 0;
+                background: var(--bg-white);
+                padding-top: 16px;
+                margin-top: 16px;
+                border-top: 1px solid var(--border-color);
+            }
+            
+            .avatar-selection {
+                gap: 8px;
+                justify-content: center;
+            }
+            
+            .avatar-option {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .form-row {
+                gap: 12px;
+            }
+            
+            .form-input {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            
+            .password-reset-info {
+                padding: 12px;
+                font-size: 12px;
+            }
+            
+            /* Улучшение отображения списка пользователей */
+            .users-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 16px;
+            }
+            
+            .user-card {
+                padding: 16px;
+            }
+            
+            .user-avatar {
+                font-size: 32px;
+            }
+            
+            .user-details h3 {
+                font-size: 16px;
+            }
+            
+            .user-details p {
+                font-size: 13px;
+            }
+            
+            .role-badge {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+
+        /* Дополнительные улучшения для очень маленьких экранов в горизонтальной ориентации */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .page-content {
+                padding: 16px 12px;
+            }
+            
+            .tickets-header {
+                margin-bottom: 16px;
+            }
+            
+            .users-header {
+                margin-bottom: 16px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+            
+            /* Улучшение модального окна уведомлений */
+            .notification-modal .modal {
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            .notification-modal .modal-actions {
+                position: sticky;
+                bottom: 0;
+                background: var(--bg-white);
+                padding-top: 16px;
+                margin-top: 16px;
+                border-top: 1px solid var(--border-color);
+                flex-wrap: wrap;
+            }
+            
+            .notification-modal .modal-actions button {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        /* Специфические улучшения для экранов с очень маленькой высотой */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chat-messages {
+                max-height: calc(100vh - 180px) !important;
+                padding: 4px 8px;
+            }
+            
+            .message {
+                padding: 4px 8px;
+                margin-bottom: 2px;
+            }
+            
+            .message-text {
+                font-size: 11px;
+                line-height: 1.3;
+            }
+            
+            .message-time {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+            
+            .chat-input-container {
+                padding: 4px 8px;
+            }
+            
+            .chat-input {
+                min-height: 28px;
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            
+            .send-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            
+            /* Улучшение модальных окон */
+            .modal {
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-title {
+                font-size: 20px;
+                margin-bottom: 16px;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-input {
+                padding: 8px 12px;
+            }
+            
+            .modal-actions {
+                margin-top: 16px;
+            }
+        }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ ИСПРАВЛЕНИЯ ПРОБЛЕМ */
+
+        /* Исправление адаптации для горизонтальной ориентации в разделе "Обращения" */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .tickets-container {
+                height: calc(100vh - 120px);
+                grid-template-columns: 1fr 1.5fr;
+                gap: 16px;
+            }
+            
+            .tickets-list {
+                max-height: calc(100vh - 120px);
+                border-radius: var(--radius-lg);
+            }
+            
+            .ticket-chat-view {
+                display: flex !important;
+                position: static;
+                border-radius: var(--radius-xl);
+                max-height: calc(100vh - 120px);
+            }
+            
+            .ticket-chat-view.active {
+                position: static;
+                animation: none;
+            }
+            
+            .tickets-scroll-container {
+                max-height: calc(100vh - 120px);
+                overflow-y: auto;
+            }
+            
+            .ticket-chat-card {
+                padding: 12px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .ticket-chat-card.active {
+                background: #ecfdf5;
+                border-left: 4px solid var(--primary-color);
+            }
+            
+            .chat-card-header {
+                margin-bottom: 0;
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .chat-user-info {
+                min-width: 0;
+            }
+            
+            .chat-user-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+                flex-shrink: 0;
+            }
+            
+            .chat-user-details {
+                min-width: 0;
+            }
+            
+            .chat-user-name {
+                font-size: 13px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .chat-time {
+                font-size: 11px;
+            }
+            
+            .chat-status-badge {
+                padding: 4px 8px;
+                font-size: 10px;
+                white-space: nowrap;
+            }
+            
+            .chat-preview {
+                display: none;
+            }
+            
+            .chat-preview-footer {
+                margin-top: 0;
+                display: none;
+            }
+            
+            .chat-view-header {
+                padding: 12px 16px;
+                flex-wrap: nowrap;
+                gap: 12px;
+            }
+            
+            .chat-view-user {
+                flex: 0 0 auto;
+                min-width: 0;
+            }
+            
+            .chat-view-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .chat-view-details h3 {
+                font-size: 14px;
+                margin-bottom: 2px;
+            }
+            
+            .chat-view-details p {
+                font-size: 12px;
+            }
+            
+            .chat-view-actions {
+                flex: 1;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            
+            .mobile-header-actions {
+                flex-wrap: nowrap;
+                gap: 8px;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 0 0 auto;
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                min-width: 120px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .action-buttons-row {
+                flex-wrap: nowrap;
+                gap: 8px;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                padding: 8px 12px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+            
+            .close-chat-btn {
+                display: none !important;
+            }
+            
+            .chat-messages {
+                flex: 1;
+                max-height: calc(100vh - 220px) !important;
+                padding: 12px 16px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .message {
+                max-width: 85%;
+                padding: 10px 14px;
+                margin-bottom: 4px;
+            }
+            
+            .message-text {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+            
+            .message-time {
+                font-size: 10px;
+                margin-top: 4px;
+            }
+            
+            .message-system {
+                max-width: 80%;
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+            
+            .chat-input-container {
+                padding: 12px 16px;
+                border-top: 1px solid var(--border-color);
+                background: var(--bg-white);
+                position: sticky;
+                bottom: 0;
+            }
+            
+            .chat-input-row {
+                gap: 8px;
+                align-items: center;
+            }
+            
+            .chat-input {
+                min-height: 40px;
+                padding: 10px 14px;
+                font-size: 14px;
+                line-height: 1.4;
+                border-radius: var(--radius);
+                max-height: 80px;
+            }
+            
+            .send-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+                white-space: nowrap;
+                border-radius: var(--radius);
+                min-width: auto;
+            }
+            
+            .send-btn i {
+                font-size: 14px;
+            }
+        }
+
+        /* Специфические улучшения для очень маленьких экранов в горизонтальной ориентации */
+        @media (max-height: 400px) and (orientation: landscape) {
+            .chat-messages {
+                max-height: calc(100vh - 140px) !important;
+                padding: 4px 8px;
+            }
+            
+            .message {
+                padding: 4px 8px;
+                margin-bottom: 2px;
+            }
+            
+            .message-text {
+                font-size: 11px;
+                line-height: 1.3;
+            }
+            
+            .message-time {
+                font-size: 8px;
+                margin-top: 2px;
+            }
+            
+            .chat-input-container {
+                padding: 4px 8px;
+            }
+            
+            .chat-input {
+                min-height: 28px;
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            
+            .send-btn {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+        }
+
+        /* Исправление для модального окна редактирования пользователя */
+        .edit-user-modal .modal {
+            max-width: 600px;
+            width: 90%;
+        }
+
+        @media (max-width: 768px) {
+            .edit-user-modal .modal {
+                max-width: 95%;
+                margin: 10px;
+                padding: 20px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .edit-user-modal .modal-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .edit-user-modal .modal-actions button {
+                width: 100%;
+                margin: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .edit-user-modal .modal {
+                margin: 5px;
+                padding: 16px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .avatar-selection {
+                justify-content: center;
+            }
+            
+            .password-reset-info {
+                font-size: 12px;
+                padding: 12px;
+            }
+        }
+
+        /* Стили для нового модального окна сброса пароля */
+        .password-reset-modal .modal {
+            max-width: 500px;
+        }
+
+        .reset-link-container {
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin: 16px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .reset-link {
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--primary-dark);
+            text-decoration: underline;
+            word-break: break-all;
+            padding: 8px;
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--primary-color);
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Улучшение отображения кнопок в модальном окне редактирования пользователя */
+        .edit-user-modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .edit-user-modal .modal-actions {
+                flex-direction: column;
+            }
+            
+            .edit-user-modal .modal-actions button {
+                width: 100%;
+            }
+        }
+
+        /* Исправление для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .edit-user-modal .modal {
+                padding: 12px;
+            }
+            
+            .avatar-option {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .form-input {
+                padding: 8px 12px;
+            }
+            
+            .modal-actions button {
+                padding: 10px;
+            }
+        }
+
+        /* Плавная анимация для переключения между состояниями */
+        .ticket-chat-card {
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-container {
+            transition: all 0.3s ease;
+        }
+
+        /* Улучшение скроллбаров для лучшего UX */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .tickets-scroll-container::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            .chat-messages::-webkit-scrollbar {
+                width: 4px;
+            }
+            
+            .tickets-scroll-container::-webkit-scrollbar-thumb,
+            .chat-messages::-webkit-scrollbar-thumb {
+                background: var(--text-light);
+                border-radius: 2px;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ ВЕРТИКАЛЬНОЙ ОРИЕНТАЦИИ НА МОБИЛЬНЫХ УСТРОЙСТВАХ */
+
+        /* Исправление для отображения информации о пользователе в вертикальной ориентации */
+        @media (max-width: 1024px) and (orientation: portrait) {
+            .chat-view-header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .chat-view-user {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 0;
+            }
+            
+            .chat-view-avatar {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+                flex-shrink: 0;
+            }
+            
+            .chat-view-details {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .chat-view-details h3 {
+                font-size: 16px;
+                margin-bottom: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .chat-view-details p {
+                font-size: 14px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .chat-view-actions {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .mobile-header-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .close-chat-btn {
+                display: flex !important;
+                width: 40px;
+                height: 40px;
+                align-items: center;
+                justify-content: center;
+                background: var(--bg-light);
+                border: none;
+                border-radius: var(--radius);
+                cursor: pointer;
+                color: var(--text-dark);
+                font-size: 16px;
+                transition: var(--transition);
+                flex-shrink: 0;
+            }
+            
+            .close-chat-btn:hover {
+                background: var(--border-color);
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                width: 100%;
+                min-width: auto;
+                justify-content: space-between;
+            }
+            
+            .action-buttons-row {
+                display: flex;
+                gap: 8px;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                flex: 1;
+                min-width: 0;
+                padding: 10px 14px;
+                font-size: 13px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ ДИАПАЗОНА 819-1024px ВЕРТИКАЛЬНОЙ ОРИЕНТАЦИИ */
+        @media (min-width: 819px) and (max-width: 1024px) and (orientation: portrait) {
+            .chat-view-header {
+                padding: 16px 20px;
+            }
+            
+            .chat-view-actions {
+                gap: 16px;
+            }
+            
+            .mobile-header-actions {
+                gap: 16px;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 0 0 calc(50% - 8px);
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                min-width: 140px;
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+            
+            .action-buttons-row {
+                gap: 12px;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                flex: 0 0 calc(50% - 6px);
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+            
+            .close-chat-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ УЗКИХ ЭКРАНОВ ВЕРТИКАЛЬНОЙ ОРИЕНТАЦИИ */
+        @media (max-width: 818px) and (orientation: portrait) {
+            .chat-view-actions {
+                gap: 10px;
+            }
+            
+            .mobile-header-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                width: 100%;
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                width: 100%;
+            }
+            
+            .action-buttons-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* ДОПОЛНИТЕЛЬНЫЕ МЕДИА-ЗАПРОСЫ ДЛЯ ТОЧНОЙ НАСТРОЙКИ */
+        @media (min-width: 819px) and (max-width: 850px) and (orientation: portrait) {
+            .chat-view-actions {
+                flex-direction: column;
+            }
+            
+            .mobile-header-actions {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+            
+            .action-buttons-row {
+                width: 100%;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 0 0 calc(50% - 6px);
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                flex: 0 0 calc(50% - 6px);
+            }
+        }
+
+        @media (min-width: 851px) and (max-width: 1024px) and (orientation: portrait) {
+            .chat-view-actions {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .mobile-header-actions {
+                flex: 1;
+                margin-bottom: 0;
+                margin-right: 16px;
+            }
+            
+            .action-buttons-row {
+                flex: 0 0 auto;
+            }
+        }
+
+        /* ГАРАНТИЯ ВИДИМОСТИ ВСЕХ ЭЛЕМЕНТОВ */
+        .chat-view-actions {
+            position: relative;
+            z-index: 2;
+        }
+
+        .mobile-header-actions {
+            position: relative;
+            z-index: 3;
+        }
+
+        .action-buttons-row {
+            position: relative;
+            z-index: 3;
+        }
+
+        /* ПРЕДОТВРАЩЕНИЕ НАЛОЖЕНИЯ */
+        .chat-view-header {
+            position: relative;
+            z-index: 10;
+            overflow: visible;
+        }
+
+        .status-dropdown-content,
+        .priority-dropdown-content {
+            z-index: 1000; /* Исправление: увеличен z-index для выпадающих списков */
+        }
+
+        /* УЛУЧШЕНИЕ ВНЕШНЕГО ВИДА КНОПОК */
+        .btn-secondary, 
+        .btn-primary {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .status-dropdown-btn,
+        .priority-dropdown-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        /* ДОПОЛНИТЕЛЬНЫЕ МЕДИА-ЗАПРОСЫ ДЛЯ ТОЧНОЙ НАСТРОЙКИ */
+        @media (min-width: 819px) and (max-width: 850px) and (orientation: portrait) {
+            .chat-view-actions {
+                flex-direction: column;
+            }
+            
+            .mobile-header-actions {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+            
+            .action-buttons-row {
+                width: 100%;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 0 0 calc(50% - 6px);
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                flex: 0 0 calc(50% - 6px);
+            }
+        }
+
+        @media (min-width: 851px) and (max-width: 1024px) and (orientation: portrait) {
+            .chat-view-actions {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .mobile-header-actions {
+                flex: 1;
+                margin-bottom: 0;
+                margin-right: 16px;
+            }
+            
+            .action-buttons-row {
+                flex: 0 0 auto;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ ГОРИЗОНТАЛЬНОЙ ОРИЕНТАЦИИ */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .chat-view-actions {
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .mobile-header-actions {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .action-buttons-row {
+                flex-wrap: nowrap;
+                justify-content: flex-end;
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .status-dropdown-btn {
+                min-width: 120px;
+                margin-right: 8px;
+            }
+            
+            .priority-dropdown-btn {
+                min-width: 120px;
+            }
+            
+            .btn-secondary, .btn-primary {
+                min-width: auto;
+                white-space: nowrap;
+            }
+        }
+
+        /* Дополнительные исправления для очень маленьких экранов в горизонтальной ориентации */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .chat-view-actions {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .mobile-header-actions {
+                flex: 0 0 auto;
+            }
+            
+            .action-buttons-row {
+                flex: 1;
+                justify-content: flex-end;
+            }
+            
+            .status-dropdown-btn,
+            .priority-dropdown-btn {
+                min-width: 100px;
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            
+            .btn-secondary, .btn-primary {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Исправление для кнопки status-dropdown-btn в мобильной версии горизонтальной ориентации */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .status-dropdown {
+                margin-right: 8px;
+            }
+            
+            .status-dropdown-btn {
+                min-width: 120px;
+            }
+        }
+
+        /* Убедимся, что все кнопки видны и не перекрываются */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .chat-view-header {
+                align-items: center;
+            }
+            
+            .chat-view-actions {
+                align-items: center;
+            }
+            
+            .mobile-header-actions {
+                align-items: center;
+            }
+            
+            .action-buttons-row {
+                align-items: center;
+            }
+        }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ ИЗМЕНЕНИЯ РАСПОЛОЖЕНИЯ КНОПОК В ГОРИЗОНТАЛЬНОЙ ОРИЕНТАЦИИ */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .chat-view-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .mobile-header-actions {
+                width: 100%;
+                justify-content: space-between;
+                order: 2;
+            }
+            
+            .action-buttons-row {
+                width: 100%;
+                justify-content: space-between;
+                order: 1;
+                margin-bottom: 8px;
+            }
+            
+            .status-dropdown,
+            .priority-dropdown {
+                flex: 1;
+                margin-right: 8px;
+            }
+            
+            .status-dropdown:last-child,
+            .priority-dropdown:last-child {
+                margin-right: 0;
+            }
+            
+            .btn-secondary,
+            .btn-primary {
+                flex: 1;
+                min-width: 0;
+                justify-content: center;
+            }
+        }
+
+        /* Дополнительные улучшения для iPhone 14 Pro Max и других больших устройств */
+        @media (max-width: 1024px) and (orientation: landscape) and (min-height: 375px) {
+            .chat-view-header {
+                padding: 10px 14px;
+            }
+            
+            .chat-messages {
+                max-height: calc(100vh - 200px) !important;
+            }
+            
+            .chat-input-container {
+                padding: 10px 14px;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ ПРОБЛЕМ С ПРОКРУТКОЙ НА МОБИЛЬНЫХ УСТРОЙСТВАХ */
+        @media (max-width: 1024px) {
+            .tickets-scroll-container {
+                -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+                overflow-y: auto;
+            }
+            
+            .chat-messages {
+                -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+                overflow-y: auto;
+            }
+            
+            /* Улучшение отображения для мобильных устройств */
+            .ticket-chat-view.active {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 80;
+                border-radius: 0;
+                background: var(--bg-white);
+                animation: slideInRight 0.3s ease-out;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .chat-messages {
+                flex: 1;
+                overflow-y: auto;
+                padding: 16px;
+                max-height: none;
+            }
+            
+            .chat-input-container {
+                flex-shrink: 0;
+            }
+        }
+
+        /* ИСПРАВЛЕНИЯ ДЛЯ ПРОБЛЕМЫ С БЕЛЫМ ПРОСТРАНСТВОМ В ОБЛАСТИ ЧАТА */
+        .ticket-chat-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 300px; /* Минимальная высота для области сообщений */
+        }
+
+        .chat-input-container {
+            flex-shrink: 0;
+        }
+
+        /* Улучшение отображения на десктопе */
+        @media (min-width: 1025px) {
+            .ticket-chat-view {
+                height: calc(100vh - 200px);
+            }
+            
+            .chat-messages {
+                max-height: calc(100vh - 400px);
+                min-height: 400px; /* Увеличенная минимальная высота на десктопе */
+            }
+        }
+
+        /* Улучшение отображения сообщений */
+        .message {
+            margin-bottom: 8px;
+        }
+
+        /* Уменьшение отступов в области чата для экономии места */
+        .chat-input-container {
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ ПРИКРЕПЛЕНИЯ ФАЙЛОВ */
+
+        .attach-btn {
+            padding: 14px 16px;
+            background: var(--bg-light);
+            color: var(--text-medium);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .attach-btn:hover {
+            background: var(--border-color);
+            color: var(--text-dark);
+            transform: translateY(-1px);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-attachment {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin: 8px 0;
+            animation: fadeIn 0.3s ease-out;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .file-attachment:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow);
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-size {
+            color: var(--text-medium);
+            font-size: 12px;
+        }
+
+        .file-progress {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .file-progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .file-action-btn {
+            padding: 8px;
+            background: none;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-medium);
+        }
+
+        .file-action-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .file-cancel-btn:hover {
+            color: #dc2626;
+        }
+
+        /* Анимация загрузки файла */
+        @keyframes pulseUpload {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .file-attachment.uploading {
+            animation: pulseUpload 2s infinite;
+        }
+
+        /* Стили для различных типов файлов */
+        .file-preview-image {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: var(--radius);
+            object-fit: cover;
+            margin-top: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Адаптация для мобильных устройств */
+        @media (max-width: 768px) {
+            .file-attachment {
+                padding: 12px;
+            }
+            
+            .file-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+            
+            .file-name {
+                font-size: 14px;
+            }
+            
+            .file-preview-image {
+                max-width: 150px;
+                max-height: 100px;
+            }
+        }
+
+        /* Исправление расположения кнопок ввода для мобильных устройств */
+        @media (max-width: 480px) {
+            .chat-input-row {
+                gap: 8px;
+            }
+            
+            .attach-btn {
+                padding: 12px;
+            }
+            
+            .send-btn {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Knowledge Base Styles */
+        .knowledge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .knowledge-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .knowledge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .article-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .article-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .article-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .article-title i {
+            color: var(--primary-color);
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .article-card:hover .article-title i {
+            opacity: 1;
+            transform: rotate(10deg);
+        }
+
+        .article-excerpt {
+            color: var(--text-medium);
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-viewer {
+            max-width: 600px;
+            min-width: 300px;
+            padding: 24px;
+            position: relative;
+        }
+
+        .article-content {
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .article-content h1, .article-content h2, .article-content h3 {
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        .article-content p {
+            margin-bottom: 16px;
+        }
+
+        .article-content ul, .article-content ol {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .article-content code {
+            background: var(--bg-light);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .article-edit-container {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .editor-btn {
+            padding: 4px 8px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 12px;
+        }
+
+        .editor-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary-color);
+        }
+
+        .editor-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .editor-content {
+            min-height: 200px;
+            padding: 12px;
+            outline: none;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .article-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
@@ -2366,6 +4024,10 @@
             <button class="nav-item" data-page="users">
                 <i class="fas fa-users nav-icon"></i>
                 <span class="nav-text">Пользователи</span>
+            </button>
+            <button class="nav-item" data-page="knowledge">
+                <i class="fas fa-book nav-icon"></i>
+                <span class="nav-text">База знаний</span>
             </button>
             <button class="nav-item" data-page="settings">
                 <i class="fas fa-cog nav-icon"></i>
@@ -2615,6 +4277,23 @@
             </div>
         </div>
 
+        <!-- Knowledge Base Page -->
+        <div id="knowledgePage" class="page-content hidden">
+            <div class="knowledge-header">
+                <h1 class="page-title">База знаний</h1>
+                <div class="knowledge-controls">
+                    <input type="text" class="search-input" id="searchArticles" placeholder="Поиск статей...">
+                    <button class="btn-primary" id="newArticleBtn">
+                        <i class="fas fa-plus"></i>
+                        Новая статья
+                    </button>
+                </div>
+            </div>
+            <div class="knowledge-grid" id="articlesGrid">
+                <!-- Articles will be populated dynamically -->
+            </div>
+        </div>
+
         <div id="settingsPage" class="page-content hidden">
             <h1 class="page-title">Настройки</h1>
             <div class="settings-grid">
@@ -2672,6 +4351,12 @@
     <div class="toast hidden" id="toast">
         <i class="fas fa-check-circle"></i>
         <span id="toastMessage">Операция выполнена успешно</span>
+    </div>
+
+    <!-- Notification toast -->
+    <div class="notification-toast hidden" id="notificationToast">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationToastMessage">Уведомление</span>
     </div>
 
     <!-- Add User Modal -->
@@ -2840,6 +4525,101 @@
         </div>
     </div>
 
+    <!-- Password Reset Modal -->
+    <div id="passwordResetModal" class="modal-overlay hidden">
+        <div class="modal password-reset-modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('passwordResetModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Сброс пароля</h2>
+            <p>Ссылка для сброса пароля сформирована. Отправьте её пользователю:</p>
+            <div class="reset-link-container">
+                <div class="reset-link" id="resetLink"></div>
+            </div>
+            <button class="copy-btn" id="copyResetLink">
+                <i class="fas fa-copy"></i>
+                Скопировать ссылку
+            </button>
+            <div class="modal-actions">
+                <button class="btn-primary" id="closePasswordReset">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Article Modal -->
+    <div id="newArticleModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('newArticleModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Новая статья</h2>
+            <div class="form-group">
+                <label class="form-label">Заголовок</label>
+                <input type="text" class="form-input" id="newArticleTitle" placeholder="Введите заголовок">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Содержание</label>
+                <div class="article-edit-container">
+                    <div class="editor-toolbar">
+                        <button class="editor-btn" onclick="editorCommand('bold', 'newArticleContent')"><i class="fas fa-bold"></i></button>
+                        <button class="editor-btn" onclick="editorCommand('italic', 'newArticleContent')"><i class="fas fa-italic"></i></button>
+                        <button class="editor-btn" onclick="editorCommand('underline', 'newArticleContent')"><i class="fas fa-underline"></i></button>
+                        <select class="editor-btn" onchange="editorCommand('foreColor', this.value, 'newArticleContent')">
+                            <option value="">Цвет</option>
+                            <option value="red">Красный</option>
+                            <option value="green">Зеленый</option>
+                            <option value="blue">Синий</option>
+                        </select>
+                        <select class="editor-btn" onchange="editorCommand('fontSize', this.value, 'newArticleContent')">
+                            <option value="">Размер</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <button class="editor-btn" onclick="editorCommand('insertUnorderedList', 'newArticleContent')"><i class="fas fa-list-ul"></i></button>
+                        <button class="editor-btn" onclick="editorCommand('insertOrderedList', 'newArticleContent')"><i class="fas fa-list-ol"></i></button>
+                    </div>
+                    <div class="editor-content" contenteditable="true" id="newArticleContent"></div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="confirmNewArticle">Создать</button>
+                <button class="btn-cancel" id="cancelNewArticle">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Viewer Modal -->
+    <div id="articleViewerModal" class="modal-overlay hidden">
+        <div class="modal article-viewer">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('articleViewerModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title" id="articleViewerTitle"></h2>
+            <div id="articleViewerContent" class="article-content"></div>
+            <div class="article-actions" id="articleViewerActions">
+                <!-- Actions will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Article Confirmation Modal -->
+    <div id="deleteArticleModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('deleteArticleModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Подтверждение удаления</h2>
+            <p id="deleteArticleText" class="form-label">Вы уверены, что хотите удалить статью?</p>
+            <div class="modal-actions">
+                <button class="btn-confirm" id="confirmDeleteArticle">Удалить</button>
+                <button class="btn-cancel" id="cancelDeleteArticle">Отмена</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Sample data
         let tickets = JSON.parse(localStorage.getItem('smartSupportTickets')) || [
@@ -2973,6 +4753,45 @@
             }
         ];
 
+        let articles = JSON.parse(localStorage.getItem('smartSupportArticles')) || [
+            {
+                id: 1,
+                title: 'Как создать новое обращение',
+                content: '<h2 style="color: var(--primary-color); font-size: 24px;">Создание нового обращения</h2><p><b>Шаг 1:</b> Перейдите в раздел <i>"Обращения"</i>.</p><p><b>Шаг 2:</b> Нажмите кнопку <span style="color: green; font-size: 18px;">"Новое обращение"</span>.</p><ul><li>Введите <span style="font-weight: bold; color: blue;">тему</span></li><li>Напишите <span style="font-style: italic; color: red;">сообщение</span></li><li>Выберите канал и приоритет</li><li>Нажмите <span style="font-size: 20px;">"Создать"</span></li></ul>',
+                updated: new Date()
+            },
+            {
+                id: 2,
+                title: 'Обработка обращений в дашборде',
+                content: '<h2 style="color: var(--secondary-color); font-size: 22px;">Обработка в дашборде</h2><p>В дашборде вы можете просмотреть <b>статистику</b> и <i>последние обращения</i>.</p><h3 style="color: purple;">Статистика:</h3><ul><li>Всего обращений - <span style="color: green; font-size: 18px;">число</span></li><li>Решено - <span style="color: blue;">число</span></li><li>В ожидании - <span style="color: red; font-style: italic;">число</span></li></ul>',
+                updated: new Date()
+            },
+            {
+                id: 3,
+                title: 'Использование канбан-доски',
+                content: '<h2 style="font-size: 26px; color: #ff5722;">Канбан-доска</h2><p><b>Перетаскивайте</b> карточки между колонками для <i style="color: teal;">изменения статуса</i>.</p><p>Колонки: <span style="font-weight: bold; color: green;">Новое</span>, <span style="color: blue; font-size: 18px;">В работе</span>, <span style="color: orange;">Ожидание</span>, <span style="color: purple; font-style: italic;">Решено</span>.</p>',
+                updated: new Date()
+            },
+            {
+                id: 4,
+                title: 'Управление пользователями',
+                content: '<h2 style="color: var(--primary-dark); font-size: 20px;">Управление пользователями</h2><p>В разделе <i>"Пользователи"</i> вы можете <b>добавлять</b>, <span style="color: red;">редактировать</span> и удалять пользователей.</p><h3>Роли:</h3><ul><li><span style="font-size: 16px; color: blue;">Оператор 1-й линии</span></li><li>Оператор 2-й линии</li><li><span style="font-weight: bold; color: green;">Администратор</span></li></ul>',
+                updated: new Date()
+            },
+            {
+                id: 5,
+                title: 'Анализ аналитики',
+                content: '<h2 style="font-size: 24px; color: #4caf50;">Анализ аналитики</h2><p>Раздел <i>"Аналитика"</i> предоставляет <b>статистику</b> по обращениям и каналам.</p><p>Используйте для <span style="color: purple; font-style: italic;">мониторинга</span> эффективности поддержки.</p>',
+                updated: new Date()
+            },
+            {
+                id: 6,
+                title: 'Настройки системы',
+                content: '<h2 style="color: #2196f3; font-size: 22px;">Настройки системы</h2><p>В настройках вы можете изменить <b>название системы</b>, время ответа и <i style="color: red;">уведомления</i>.</p><h3>Уведомления:</h3><ul><li><span style="font-size: 18px;">Email</span></li><li>Push</li><li><span style="font-weight: bold; color: green;">SMS</span></li></ul>',
+                updated: new Date()
+            }
+        ];
+
         const roleLabels = {
             operator1: 'Оператор 1-й линии',
             operator2: 'Оператор 2-й линии',
@@ -3034,6 +4853,9 @@
             { id: 2, title: 'Изменен статус', message: 'Обращение #2 переведено в статус "В работе"', time: new Date(Date.now() - 5 * 60 * 60 * 1000), read: false },
             { id: 3, title: 'Новый пользователь', message: 'Добавлен новый пользователь в систему', time: new Date(Date.now() - 24 * 60 * 60 * 1000), read: true }
         ];
+        let filteredArticles = [...articles];
+        let currentArticle = null;
+        let articleEditMode = false;
 
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
@@ -3046,6 +4868,8 @@
         const notificationBadge = document.getElementById('notificationBadge');
         const ticketChatView = document.getElementById('ticketChatView');
         const overlay = document.getElementById('overlay');
+        const notificationToast = document.getElementById('notificationToast');
+        const notificationToastMessage = document.getElementById('notificationToastMessage');
         
         // Dashboard elements
         const totalTickets = document.getElementById('totalTickets');
@@ -3071,12 +4895,31 @@
         const userFilter = document.getElementById('userFilter');
         const addUserBtn = document.getElementById('addUserBtn');
         
+        // Knowledge Base elements
+        const searchArticles = document.getElementById('searchArticles');
+        const newArticleBtn = document.getElementById('newArticleBtn');
+        const articlesGrid = document.getElementById('articlesGrid');
+        const newArticleModal = document.getElementById('newArticleModal');
+        const newArticleTitle = document.getElementById('newArticleTitle');
+        const newArticleContent = document.getElementById('newArticleContent');
+        const confirmNewArticle = document.getElementById('confirmNewArticle');
+        const cancelNewArticle = document.getElementById('cancelNewArticle');
+        const articleViewerModal = document.getElementById('articleViewerModal');
+        const articleViewerTitle = document.getElementById('articleViewerTitle');
+        const articleViewerContent = document.getElementById('articleViewerContent');
+        const articleViewerActions = document.getElementById('articleViewerActions');
+        const deleteArticleModal = document.getElementById('deleteArticleModal');
+        const deleteArticleText = document.getElementById('deleteArticleText');
+        const confirmDeleteArticle = document.getElementById('confirmDeleteArticle');
+        const cancelDeleteArticle = document.getElementById('cancelDeleteArticle');
+        
         // Modal elements
         const addUserModal = document.getElementById('addUserModal');
         const deleteUserModal = document.getElementById('deleteUserModal');
         const newTicketModal = document.getElementById('newTicketModal');
         const notificationsModal = document.getElementById('notificationsModal');
         const editUserModal = document.getElementById('editUserModal');
+        const passwordResetModal = document.getElementById('passwordResetModal');
         const confirmAddUser = document.getElementById('confirmAddUser');
         const cancelAddUser = document.getElementById('cancelAddUser');
         const confirmDeleteUser = document.getElementById('confirmDeleteUser');
@@ -3089,6 +4932,9 @@
         const resetPasswordBtn = document.getElementById('resetPasswordBtn');
         const deleteUserText = document.getElementById('deleteUserText');
         const markAllReadBtn = document.getElementById('markAllReadBtn');
+        const resetLink = document.getElementById('resetLink');
+        const copyResetLink = document.getElementById('copyResetLink');
+        const closePasswordReset = document.getElementById('closePasswordReset');
         
         // Edit user form elements
         const editUserName = document.getElementById('editUserName');
@@ -3097,7 +4943,7 @@
         const editUserEmail = document.getElementById('editUserEmail');
         const editUserRole = document.getElementById('editUserRole');
         const avatarSelection = document.getElementById('avatarSelection');
-        
+
         // Toast
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
@@ -3110,6 +4956,7 @@
             renderTicketsList();
             renderKanban();
             renderUsers();
+            renderArticles();
             setupEventListeners();
             setupModalCloseHandlers();
             addCloseButtonToEditModal();
@@ -3156,7 +5003,10 @@
             
             saveUserBtn.addEventListener('click', saveUser);
             cancelEditUser.addEventListener('click', () => hideModal(editUserModal));
-            resetPasswordBtn.addEventListener('click', resetPassword);
+            resetPasswordBtn.addEventListener('click', showPasswordResetModal);
+            
+            copyResetLink.addEventListener('click', copyResetLinkToClipboard);
+            closePasswordReset.addEventListener('click', () => hideModal(passwordResetModal));
             
             // Avatar selection
             avatarSelection.addEventListener('click', (e) => {
@@ -3171,7 +5021,7 @@
             });
             
             // Close modal when clicking outside
-            [addUserModal, deleteUserModal, newTicketModal, notificationsModal, editUserModal].forEach(modal => {
+            [addUserModal, deleteUserModal, newTicketModal, notificationsModal, editUserModal, passwordResetModal].forEach(modal => {
                 modal.addEventListener('click', (e) => {
                     if (e.target === modal) hideModal(modal);
                 });
@@ -3197,6 +5047,17 @@
                     overlay.classList.remove('active');
                 }
             });
+
+            // Knowledge base listeners
+            searchArticles.addEventListener('input', filterArticles);
+            newArticleBtn.addEventListener('click', showNewArticleModal);
+            confirmNewArticle.addEventListener('click', createNewArticle);
+            cancelNewArticle.addEventListener('click', () => hideModal(newArticleModal));
+            articleViewerModal.addEventListener('click', (e) => {
+                if (e.target === articleViewerModal) hideModal(articleViewerModal);
+            });
+            confirmDeleteArticle.addEventListener('click', deleteArticle);
+            cancelDeleteArticle.addEventListener('click', () => hideModal(deleteArticleModal));
         }
         
         function setupModalCloseHandlers() {
@@ -3238,6 +5099,11 @@
             
             if (wasMobile !== isMobile) {
                 updateLayout();
+            }
+            
+            // Перерисовываем чат при изменении ориентации
+            if (currentTicket) {
+                renderChatView();
             }
         }
 
@@ -3309,6 +5175,8 @@
                 renderKanban();
             } else if (page === 'users') {
                 renderUsers();
+            } else if (page === 'knowledge') {
+                renderArticles();
             }
         }
 
@@ -3336,6 +5204,11 @@
                     </div>
                 </div>
             `).join('');
+            
+            // Исправление для приоритета высокий - делаем текст белым
+            document.querySelectorAll('.priority-high').forEach(element => {
+                element.style.color = 'white';
+            });
         }
 
         function renderStatusStats() {
@@ -3434,7 +5307,8 @@
             renderChatView();
             
             // On mobile, show the chat view in full screen
-            if (isMobile) {
+            const isMobilePortrait = window.innerWidth <= 1024 && window.matchMedia("(orientation: portrait)").matches;
+            if (isMobilePortrait) {
                 ticketChatView.classList.add('active');
             }
         }
@@ -3453,6 +5327,34 @@
                 return;
             }
 
+            // Определяем, находимся ли мы в портретной ориентации на мобильном устройстве
+            const isMobilePortrait = window.innerWidth <= 1024 && window.matchMedia("(orientation: portrait)").matches;
+            const isMobileLandscape = window.innerWidth <= 1024 && window.matchMedia("(orientation: landscape)").matches;
+            
+            let messagesHtml = '';
+            let previousDate = null;
+
+            currentTicket.messages.forEach(message => {
+                const messageDate = new Date(message.time).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+                if (!previousDate || messageDate !== previousDate) {
+                    messagesHtml += `<div class="message date-header">${messageDate}</div>`;
+                    previousDate = messageDate;
+                }
+
+                let nameHeader = '';
+                if (message.sender === 'agent') {
+                    nameHeader = '<div class="agent-name">Анна Волкова (Оператор 1-й линии)</div>';
+                }
+
+                messagesHtml += `
+                    <div class="message ${message.sender === 'user' ? 'message-user' : message.sender === 'agent' ? 'message-agent' : 'message-system'}">
+                        ${nameHeader}
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-time">${formatTime(message.time)}</div>
+                    </div>
+                `;
+            });
+
             chatViewContent.innerHTML = `
                 <div class="chat-view-header">
                     <div class="chat-view-user">
@@ -3464,13 +5366,13 @@
                     </div>
                     <div class="chat-view-actions">
                         <div class="mobile-header-actions">
-                            ${isMobile ? `
+                            ${(isMobilePortrait || (isMobileLandscape && window.innerWidth <= 768)) ? `
                                 <button class="close-chat-btn" onclick="closeChatView()">
                                     <i class="fas fa-arrow-left"></i>
                                 </button>
                             ` : ''}
                             <div class="status-dropdown">
-                                <div class="status-label">Статус:</div>
+                                ${isMobilePortrait ? `<div class="status-label">Статус:</div>` : ''}
                                 <button class="status-dropdown-btn" onclick="toggleStatusDropdown()">
                                     <div class="status-dot-small ${statusDotColors[currentTicket.status]}"></div>
                                     ${statusLabels[currentTicket.status]}
@@ -3487,7 +5389,7 @@
                                 </div>
                             </div>
                             <div class="priority-dropdown">
-                                <div class="status-label">Приоритет:</div>
+                                ${isMobilePortrait ? `<div class="status-label">Приоритет:</div>` : ''}
                                 <button class="priority-dropdown-btn" onclick="togglePriorityDropdown()">
                                     <div class="priority-dot ${priorityColors[currentTicket.priority]}"></div>
                                     ${priorityLabels[currentTicket.priority]}
@@ -3507,30 +5409,29 @@
                         <div class="action-buttons-row">
                             <button class="btn-secondary" onclick="transferToSecondLine()">
                                 <i class="fas fa-share"></i>
-                                Передать 2 линии
+                                ${isMobileLandscape ? '2 линия' : 'Передать 2 линии'}
                             </button>
                             <button class="btn-primary" onclick="resolveCurrentTicket()" ${currentTicket.status === 'resolved' ? 'disabled' : ''}>
                                 <i class="fas fa-check-circle"></i>
-                                Решить
+                                ${isMobileLandscape ? 'Решить' : 'Решить'}
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="chat-messages" id="chatMessages">
-                    ${currentTicket.messages.map(message => `
-                        <div class="message ${message.sender === 'user' ? 'message-user' : message.sender === 'agent' ? 'message-agent' : 'message-system'}">
-                            <div class="message-text">${message.text}</div>
-                            <div class="message-time">${formatTime(message.time)}</div>
-                        </div>
-                    `).join('')}
+                    ${messagesHtml}
                 </div>
                 <div class="chat-input-container">
                     <div class="chat-input-row">
+                        <button class="attach-btn" id="attachBtn" type="button">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
                         <textarea class="chat-input" id="chatInput" placeholder="Введите сообщение..." rows="1"></textarea>
                         <button class="send-btn" onclick="sendChatMessage()">
                             <i class="fas fa-paper-plane"></i>
-                            Отправить
+                            ${isMobileLandscape ? 'Отпр.' : 'Отправить'}
                         </button>
+                        <input type="file" id="fileInput" class="file-input" multiple>
                     </div>
                 </div>
             `;
@@ -3561,6 +5462,147 @@
                 setTimeout(() => {
                     chatInput.focus();
                 }, 100);
+            }
+
+            // Setup file attachment functionality
+            setupFileAttachment();
+        }
+
+        // File attachment functionality
+        function setupFileAttachment() {
+            const attachBtn = document.getElementById('attachBtn');
+            const fileInput = document.getElementById('fileInput');
+
+            if (attachBtn && fileInput) {
+                attachBtn.addEventListener('click', () => {
+                    fileInput.click();
+                });
+
+                fileInput.addEventListener('change', handleFileSelection);
+            }
+        }
+
+        function handleFileSelection(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                displayFileAttachment(file);
+            }
+
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function displayFileAttachment(file) {
+            const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages) return;
+
+            // Create file attachment element
+            const fileAttachment = document.createElement('div');
+            fileAttachment.className = 'file-attachment uploading';
+            
+            // Get file icon based on file type
+            const fileIcon = getFileIcon(file);
+            const fileSize = formatFileSize(file.size);
+            
+            fileAttachment.innerHTML = `
+                <div class="file-icon">
+                    <i class="${fileIcon}"></i>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${fileSize}</div>
+                    <div class="file-progress">
+                        <div class="file-progress-bar"></div>
+                    </div>
+                </div>
+                <div class="file-actions">
+                    <button class="file-action-btn file-cancel-btn" onclick="cancelFileUpload(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+
+            // Add to chat
+            chatMessages.appendChild(fileAttachment);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate file upload progress
+            simulateFileUpload(fileAttachment, file);
+        }
+
+        function getFileIcon(file) {
+            const fileType = file.type.split('/')[0];
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (fileType === 'image') return 'fas fa-image';
+            if (fileType === 'video') return 'fas fa-video';
+            if (fileType === 'audio') return 'fas fa-music';
+            if (fileType === 'application') {
+                if (extension === 'pdf') return 'fas fa-file-pdf';
+                if (['doc', 'docx'].includes(extension)) return 'fas fa-file-word';
+                if (['xls', 'xlsx'].includes(extension)) return 'fas fa-file-excel';
+                if (['ppt', 'pptx'].includes(extension)) return 'fas fa-file-powerpoint';
+                if (['zip', 'rar', '7z'].includes(extension)) return 'fas fa-file-archive';
+            }
+            
+            return 'fas fa-file';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function simulateFileUpload(fileAttachment, file) {
+            const progressBar = fileAttachment.querySelector('.file-progress-bar');
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Upload complete
+                    setTimeout(() => {
+                        fileAttachment.classList.remove('uploading');
+                        progressBar.style.width = '100%';
+                        
+                        // Replace cancel button with remove button
+                        const cancelBtn = fileAttachment.querySelector('.file-cancel-btn');
+                        cancelBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                        cancelBtn.onclick = () => fileAttachment.remove();
+                        
+                        // Add preview for images
+                        if (file.type.startsWith('image/')) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                const img = document.createElement('img');
+                                img.src = e.target.result;
+                                img.className = 'file-preview-image';
+                                fileAttachment.querySelector('.file-info').appendChild(img);
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    }, 500);
+                }
+                
+                progressBar.style.width = progress + '%';
+            }, 200);
+        }
+
+        function cancelFileUpload(button) {
+            const fileAttachment = button.closest('.file-attachment');
+            if (fileAttachment) {
+                fileAttachment.remove();
             }
         }
         
@@ -3828,6 +5870,154 @@
             }
         }
 
+        // Knowledge Base Functions
+        function filterArticles() {
+            const search = searchArticles.value.toLowerCase();
+            filteredArticles = articles.filter(article => 
+                article.title.toLowerCase().includes(search) ||
+                article.content.toLowerCase().includes(search)
+            );
+            renderArticles();
+        }
+
+        function renderArticles() {
+            articlesGrid.innerHTML = filteredArticles.map(article => `
+                <div class="article-card" onclick="openArticle(${article.id})">
+                    <div class="article-title"><i class="fas fa-file-alt"></i> ${article.title}</div>
+                    <div class="article-excerpt">${article.content.replace(/<[^>]*>/g, '').substring(0, 150)}...</div>
+                </div>
+            `).join('');
+        }
+
+        function showNewArticleModal() {
+            newArticleTitle.value = '';
+            newArticleContent.innerHTML = '';
+            showModal(newArticleModal);
+        }
+
+        function createNewArticle() {
+            const title = newArticleTitle.value.trim();
+            const content = newArticleContent.innerHTML.trim();
+
+            if (title && content) {
+                const newArticle = {
+                    id: Math.max(...articles.map(a => a.id)) + 1,
+                    title,
+                    content,
+                    updated: new Date()
+                };
+
+                articles.push(newArticle);
+                filteredArticles = [...articles];
+                renderArticles();
+                saveData();
+                hideModal(newArticleModal);
+                showToast('Статья создана');
+            } else {
+                showToast('Заполните заголовок и содержание', true);
+            }
+        }
+
+        function openArticle(articleId) {
+            currentArticle = articles.find(a => a.id === articleId);
+            articleEditMode = false;
+            renderArticleViewer();
+            showModal(articleViewerModal);
+        }
+
+        function renderArticleViewer() {
+            if (!currentArticle) return;
+
+            articleViewerTitle.textContent = currentArticle.title;
+
+            if (articleEditMode) {
+                articleViewerContent.innerHTML = `
+                    <input type="text" class="form-input" id="editArticleTitle" value="${currentArticle.title}">
+                    <div class="article-edit-container">
+                        <div class="editor-toolbar">
+                            <button class="editor-btn" onclick="editorCommand('bold', 'editArticleContent')"><i class="fas fa-bold"></i></button>
+                            <button class="editor-btn" onclick="editorCommand('italic', 'editArticleContent')"><i class="fas fa-italic"></i></button>
+                            <button class="editor-btn" onclick="editorCommand('underline', 'editArticleContent')"><i class="fas fa-underline"></i></button>
+                            <select class="editor-btn" onchange="editorCommand('foreColor', this.value, 'editArticleContent')">
+                                <option value="">Цвет</option>
+                                <option value="red">Красный</option>
+                                <option value="green">Зеленый</option>
+                                <option value="blue">Синий</option>
+                            </select>
+                            <select class="editor-btn" onchange="editorCommand('fontSize', this.value, 'editArticleContent')">
+                                <option value="">Размер</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <button class="editor-btn" onclick="editorCommand('insertUnorderedList', 'editArticleContent')"><i class="fas fa-list-ul"></i></button>
+                            <button class="editor-btn" onclick="editorCommand('insertOrderedList', 'editArticleContent')"><i class="fas fa-list-ol"></i></button>
+                        </div>
+                        <div class="editor-content" contenteditable="true" id="editArticleContent">${currentArticle.content}</div>
+                    </div>
+                `;
+                articleViewerActions.innerHTML = `
+                    <button class="btn-primary" onclick="saveArticleChanges()">Сохранить</button>
+                    <button class="btn-cancel" onclick="toggleArticleEditMode()">Отмена</button>
+                `;
+            } else {
+                articleViewerContent.innerHTML = `
+                    <div>${currentArticle.content}</div>
+                `;
+                articleViewerActions.innerHTML = `
+                    <button class="btn-secondary" onclick="toggleArticleEditMode()">Редактировать</button>
+                    <button class="btn-confirm" onclick="showDeleteArticleModal()">Удалить</button>
+                `;
+            }
+        }
+
+        function showDeleteArticleModal() {
+            deleteArticleText.textContent = `Вы уверены, что хотите удалить статью "${currentArticle.title}"?`;
+            showModal(deleteArticleModal);
+        }
+
+        function toggleArticleEditMode() {
+            articleEditMode = !articleEditMode;
+            renderArticleViewer();
+        }
+
+        function editorCommand(command, value = null, editorId) {
+            const editor = document.getElementById(editorId);
+            editor.focus();
+            document.execCommand(command, false, value);
+        }
+
+        function saveArticleChanges() {
+            const editTitle = document.getElementById('editArticleTitle');
+            const editContent = document.getElementById('editArticleContent');
+
+            if (editTitle && editContent) {
+                currentArticle.title = editTitle.value.trim();
+                currentArticle.content = editContent.innerHTML.trim();
+                currentArticle.updated = new Date();
+                articleEditMode = false;
+                renderArticleViewer();
+                renderArticles();
+                saveData();
+                showToast('Статья обновлена');
+            }
+        }
+
+        function deleteArticle() {
+            const index = articles.findIndex(a => a.id === currentArticle.id);
+            if (index !== -1) {
+                articles.splice(index, 1);
+                filteredArticles = [...articles];
+                renderArticles();
+                saveData();
+                hideModal(deleteArticleModal);
+                hideModal(articleViewerModal);
+                showToast('Статья удалена');
+            }
+        }
+
         // Users Management
         function renderUsers() {
             const filter = userFilter.value;
@@ -3909,17 +6099,35 @@
             showToast('Данные пользователя обновлены');
         }
 
-        function resetPassword() {
+        function showPasswordResetModal() {
             if (!userToEdit) return;
             
             // Генерируем ссылку для сброса пароля
-            const resetLink = `${window.location.origin}/reset-password?token=${generateToken()}&user=${userToEdit.id}`;
+            const token = generateToken();
+            const resetLinkValue = `${window.location.origin}/reset-password?token=${token}&user=${userToEdit.id}`;
             
-            // В реальном приложении здесь была бы отправка email
-            showToast(`Ссылка для сброса пароля отправлена: ${resetLink}`);
+            resetLink.textContent = resetLinkValue;
+            copyResetLink.classList.remove('copied');
+            copyResetLink.innerHTML = '<i class="fas fa-copy"></i> Скопировать ссылку';
             
-            userToEdit.passwordSet = false;
-            saveData();
+            showModal(passwordResetModal);
+        }
+
+        function copyResetLinkToClipboard() {
+            const textToCopy = resetLink.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                copyResetLink.classList.add('copied');
+                copyResetLink.innerHTML = '<i class="fas fa-check"></i> Ссылка скопирована';
+                
+                setTimeout(() => {
+                    copyResetLink.classList.remove('copied');
+                    copyResetLink.innerHTML = '<i class="fas fa-copy"></i> Скопировать ссылку';
+                }, 2000);
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+                showToast('Не удалось скопировать ссылку', true);
+            });
         }
 
         function generateToken() {
@@ -3997,7 +6205,7 @@
             if (notifications.length > 0) {
                 notificationList.innerHTML = notifications.map(notification => `
                     <div class="notification-item ${notification.read ? 'read' : ''}">
-                        <button class="mark-read-btn ${notification.read ? 'checked' : ''}" onclick="markNotificationAsRead(${notification.id})">
+                        <button class="mark-read-btn ${notification.read ? 'checked' : ''}" onclick="toggleNotificationRead(${notification.id})">
                             <i class="fas fa-${notification.read ? 'check' : 'circle'}"></i>
                         </button>
                         <div class="notification-title">${notification.title}</div>
@@ -4017,14 +6225,16 @@
             showModal(notificationsModal);
         }
         
-        function markNotificationAsRead(notificationId) {
+        function toggleNotificationRead(notificationId) {
             const notification = notifications.find(n => n.id === notificationId);
-            if (notification && !notification.read) {
-                notification.read = true;
+            if (notification) {
+                notification.read = !notification.read;
                 saveData();
                 updateNotificationBadge();
                 showNotificationsModal();
-                showToast('Уведомление отмечено как прочитанное');
+                
+                const action = notification.read ? 'прочитали' : 'сделали активным';
+                showNotificationToast(`Вы ${action} уведомление`);
             }
         }
         
@@ -4041,10 +6251,19 @@
                 saveData();
                 updateNotificationBadge();
                 showNotificationsModal();
-                showToast('Все уведомления отмечены как прочитанные');
+                showNotificationToast('Все уведомления отмечены как прочитанные');
             } else {
                 showToast('Нет непрочитанных уведомлений');
             }
+        }
+        
+        function showNotificationToast(message) {
+            notificationToastMessage.textContent = message;
+            notificationToast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notificationToast.classList.add('hidden');
+            }, 2000);
         }
         
         function checkForNewTickets() {
@@ -4150,6 +6369,7 @@
             localStorage.setItem('smartSupportTickets', JSON.stringify(tickets));
             localStorage.setItem('smartSupportUsers', JSON.stringify(users));
             localStorage.setItem('smartSupportNotifications', JSON.stringify(notifications));
+            localStorage.setItem('smartSupportArticles', JSON.stringify(articles));
         }
 
         // Initialize the app
