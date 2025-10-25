@@ -1393,8 +1393,9 @@
         .agent-name {
             font-size: 12px;
             font-weight: 500;
-            color: white;
+            color: var(--text-medium);
             margin-bottom: 4px;
+            text-align: right;
         }
 
         .date-header {
@@ -3912,6 +3913,8 @@
             min-width: 300px;
             padding: 24px;
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .article-content {
@@ -3987,6 +3990,129 @@
             justify-content: flex-end;
             gap: 12px;
         }
+
+        /* Templates Page */
+        .templates-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .templates-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .template-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .template-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .template-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-title i {
+            color: var(--primary-color);
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .template-card:hover .template-title i {
+            opacity: 1;
+            transform: rotate(10deg);
+        }
+
+        .template-content {
+            color: var(--text-medium);
+            font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Template Modal */
+        .template-modal .modal {
+            max-width: 600px;
+        }
+
+        .template-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+        }
+
+        .template-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .template-item:hover {
+            background: var(--bg-light);
+        }
+
+        .template-item-title {
+            font-weight: 600;
+        }
+
+        .template-item-content {
+            color: var(--text-medium);
+            font-size: 14px;
+        }
+
+        textarea.form-input {
+            resize: none;
+            overflow-y: auto;
+            max-height: 300px;
+        }
     </style>
 </head>
 <body>
@@ -4028,6 +4154,10 @@
             <button class="nav-item" data-page="knowledge">
                 <i class="fas fa-book nav-icon"></i>
                 <span class="nav-text">База знаний</span>
+            </button>
+            <button class="nav-item" data-page="templates">
+                <i class="fas fa-file-lines nav-icon"></i>
+                <span class="nav-text">Шаблоны ответов</span>
             </button>
             <button class="nav-item" data-page="settings">
                 <i class="fas fa-cog nav-icon"></i>
@@ -4291,6 +4421,23 @@
             </div>
             <div class="knowledge-grid" id="articlesGrid">
                 <!-- Articles will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Templates Page -->
+        <div id="templatesPage" class="page-content hidden">
+            <div class="templates-header">
+                <h1 class="page-title">Шаблоны ответов</h1>
+                <div class="templates-controls">
+                    <input type="text" class="search-input" id="searchTemplates" placeholder="Поиск шаблонов...">
+                    <button class="btn-primary" id="newTemplateBtn">
+                        <i class="fas fa-plus"></i>
+                        Новый шаблон
+                    </button>
+                </div>
+            </div>
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates will be populated dynamically -->
             </div>
         </div>
 
@@ -4620,6 +4767,81 @@
         </div>
     </div>
 
+    <!-- New Template Modal -->
+    <div id="newTemplateModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('newTemplateModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Новый шаблон</h2>
+            <div class="form-group">
+                <label class="form-label">Заголовок</label>
+                <input type="text" class="form-input" id="newTemplateTitle" placeholder="Введите заголовок (для оператора)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Текст ответа</label>
+                <textarea class="form-input" id="newTemplateContent" placeholder="Введите текст ответа" rows="4"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="confirmNewTemplate">Создать</button>
+                <button class="btn-cancel" id="cancelNewTemplate">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Template Modal -->
+    <div id="editTemplateModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('editTemplateModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Редактировать шаблон</h2>
+            <div class="form-group">
+                <label class="form-label">Заголовок</label>
+                <input type="text" class="form-input" id="editTemplateTitle" placeholder="Введите заголовок (для оператора)">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Текст ответа</label>
+                <textarea class="form-input" id="editTemplateContent" placeholder="Введите текст ответа" rows="4"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="saveTemplateBtn">Сохранить</button>
+                <button class="btn-cancel" id="cancelEditTemplate">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Template Confirmation Modal -->
+    <div id="deleteTemplateModal" class="modal-overlay hidden">
+        <div class="modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('deleteTemplateModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Подтверждение удаления</h2>
+            <p id="deleteTemplateText" class="form-label">Вы уверены, что хотите удалить шаблон?</p>
+            <div class="modal-actions">
+                <button class="btn-confirm" id="confirmDeleteTemplate">Удалить</button>
+                <button class="btn-cancel" id="cancelDeleteTemplate">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Selection Modal -->
+    <div id="templatesSelectionModal" class="modal-overlay hidden">
+        <div class="modal template-modal">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('templatesSelectionModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Выберите шаблон</h2>
+            <div class="template-list" id="templateList">
+                <!-- Templates will be populated dynamically -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="hideModal(document.getElementById('templatesSelectionModal'))">Закрыть</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Sample data
         let tickets = JSON.parse(localStorage.getItem('smartSupportTickets')) || [
@@ -4653,7 +4875,7 @@
                 assignee: 'Анна Волкова',
                 messages: [
                     { sender: 'user', text: 'Добрый день! Хочу уточнить тарифы', time: new Date(Date.now() - 5 * 60 * 60 * 1000) },
-                    { sender: 'agent', text: 'Здравствуйте! Расскажу вам о наших тарифах...', time: new Date(Date.now() - 4 * 60 * 60 * 1000) }
+                    { sender: 'agent', agentName: 'Анна Волкова (Оператор 1-й линии)', text: 'Здравствуйте! Расскажу вам о наших тарифах...', time: new Date(Date.now() - 4 * 60 * 60 * 1000) }
                 ]
             },
             {
@@ -4670,7 +4892,7 @@
                 assignee: 'Дмитрий Соколов',
                 messages: [
                     { sender: 'user', text: 'При загрузке файлов появляется ошибка', time: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-                    { sender: 'agent', text: 'Понял проблему, передаю разработчикам', time: new Date(Date.now() - 20 * 60 * 60 * 1000) }
+                    { sender: 'agent', agentName: 'Дмитрий Соколов (Оператор 2-й линии)', text: 'Понял проблему, передаю разработчикам', time: new Date(Date.now() - 20 * 60 * 60 * 1000) }
                 ]
             },
             {
@@ -4687,8 +4909,8 @@
                 assignee: 'Анна Волкова',
                 messages: [
                     { sender: 'user', text: 'Не проходит оплата по карте', time: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
-                    { sender: 'agent', text: 'Проверим вашу оплату', time: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000) },
-                    { sender: 'agent', text: 'Проблема решена, попробуйте сейчас', time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+                    { sender: 'agent', agentName: 'Анна Волкова (Оператор 1-й линии)', text: 'Проверим вашу оплату', time: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000) },
+                    { sender: 'agent', agentName: 'Анна Волкова (Оператор 1-й линии)', text: 'Проблема решена, попробуйте сейчас', time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
                     { sender: 'user', text: 'Спасибо, всё работает!', time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000 + 10 * 60 * 1000) },
                     { sender: 'system', text: 'Статус изменён на "Решено"', time: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000 + 15 * 60 * 1000) }
                 ]
@@ -4792,6 +5014,12 @@
             }
         ];
 
+        let templates = JSON.parse(localStorage.getItem('smartSupportTemplates')) || [
+            { id: 1, title: 'Приветствие', content: 'Здравствуйте! Чем могу помочь?' },
+            { id: 2, title: 'Прощание', content: 'Спасибо за обращение! Хорошего дня!' },
+            { id: 3, title: 'Техническая проблема', content: 'Пожалуйста, опишите проблему подробнее.' }
+        ];
+
         const roleLabels = {
             operator1: 'Оператор 1-й линии',
             operator2: 'Оператор 2-й линии',
@@ -4856,6 +5084,10 @@
         let filteredArticles = [...articles];
         let currentArticle = null;
         let articleEditMode = false;
+        let filteredTemplates = [...templates];
+        let currentTemplate = null;
+        let templateToDelete = null;
+        let templateEditMode = false;
 
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
@@ -4913,6 +5145,27 @@
         const confirmDeleteArticle = document.getElementById('confirmDeleteArticle');
         const cancelDeleteArticle = document.getElementById('cancelDeleteArticle');
         
+        // Templates elements
+        const searchTemplates = document.getElementById('searchTemplates');
+        const newTemplateBtn = document.getElementById('newTemplateBtn');
+        const templatesGrid = document.getElementById('templatesGrid');
+        const newTemplateModal = document.getElementById('newTemplateModal');
+        const newTemplateTitle = document.getElementById('newTemplateTitle');
+        const newTemplateContent = document.getElementById('newTemplateContent');
+        const confirmNewTemplate = document.getElementById('confirmNewTemplate');
+        const cancelNewTemplate = document.getElementById('cancelNewTemplate');
+        const editTemplateModal = document.getElementById('editTemplateModal');
+        const editTemplateTitle = document.getElementById('editTemplateTitle');
+        const editTemplateContent = document.getElementById('editTemplateContent');
+        const saveTemplateBtn = document.getElementById('saveTemplateBtn');
+        const cancelEditTemplate = document.getElementById('cancelEditTemplate');
+        const deleteTemplateModal = document.getElementById('deleteTemplateModal');
+        const deleteTemplateText = document.getElementById('deleteTemplateText');
+        const confirmDeleteTemplate = document.getElementById('confirmDeleteTemplate');
+        const cancelDeleteTemplate = document.getElementById('cancelDeleteTemplate');
+        const templatesSelectionModal = document.getElementById('templatesSelectionModal');
+        const templateList = document.getElementById('templateList');
+        
         // Modal elements
         const addUserModal = document.getElementById('addUserModal');
         const deleteUserModal = document.getElementById('deleteUserModal');
@@ -4957,6 +5210,7 @@
             renderKanban();
             renderUsers();
             renderArticles();
+            renderTemplates();
             setupEventListeners();
             setupModalCloseHandlers();
             addCloseButtonToEditModal();
@@ -4968,6 +5222,24 @@
             
             // Save initial data to localStorage
             saveData();
+            
+            // Setup auto-resize for template textareas
+            setupTemplateTextareas();
+        }
+
+        // Setup auto-resize for template textareas
+        function setupTemplateTextareas() {
+            const textareas = [newTemplateContent, editTemplateContent];
+            textareas.forEach(textarea => {
+                if (textarea) {
+                    textarea.addEventListener('input', autoResizeTextarea);
+                }
+            });
+        }
+
+        function autoResizeTextarea() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
         }
 
         // Event Listeners
@@ -5058,6 +5330,17 @@
             });
             confirmDeleteArticle.addEventListener('click', deleteArticle);
             cancelDeleteArticle.addEventListener('click', () => hideModal(deleteArticleModal));
+
+            // Templates listeners
+            searchTemplates.addEventListener('input', filterTemplates);
+            newTemplateBtn.addEventListener('click', showNewTemplateModal);
+            confirmNewTemplate.addEventListener('click', createNewTemplate);
+            cancelNewTemplate.addEventListener('click', () => hideModal(newTemplateModal));
+            saveTemplateBtn.addEventListener('click', saveTemplateChanges);
+            cancelEditTemplate.addEventListener('click', () => hideModal(editTemplateModal));
+            confirmDeleteTemplate.addEventListener('click', deleteTemplate);
+            cancelDeleteTemplate.addEventListener('click', () => hideModal(deleteTemplateModal));
+            templateList.addEventListener('click', selectTemplate);
         }
         
         function setupModalCloseHandlers() {
@@ -5177,6 +5460,8 @@
                 renderUsers();
             } else if (page === 'knowledge') {
                 renderArticles();
+            } else if (page === 'templates') {
+                renderTemplates();
             }
         }
 
@@ -5333,6 +5618,8 @@
             
             let messagesHtml = '';
             let previousDate = null;
+            let previousSender = null;
+            let previousAgentName = null;
 
             currentTicket.messages.forEach(message => {
                 const messageDate = new Date(message.time).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
@@ -5343,16 +5630,20 @@
 
                 let nameHeader = '';
                 if (message.sender === 'agent') {
-                    nameHeader = '<div class="agent-name">Анна Волкова (Оператор 1-й линии)</div>';
+                    if (previousSender !== 'agent' || (previousAgentName !== message.agentName)) {
+                        nameHeader = `<div class="agent-name">${message.agentName || 'Анна Волкова (Оператор 1-й линии)'}</div>`;
+                    }
+                    previousAgentName = message.agentName || 'Анна Волкова (Оператор 1-й линии)';
                 }
 
                 messagesHtml += `
+                    ${nameHeader}
                     <div class="message ${message.sender === 'user' ? 'message-user' : message.sender === 'agent' ? 'message-agent' : 'message-system'}">
-                        ${nameHeader}
                         <div class="message-text">${message.text}</div>
                         <div class="message-time">${formatTime(message.time)}</div>
                     </div>
                 `;
+                previousSender = message.sender;
             });
 
             chatViewContent.innerHTML = `
@@ -5425,6 +5716,9 @@
                     <div class="chat-input-row">
                         <button class="attach-btn" id="attachBtn" type="button">
                             <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="attach-btn" onclick="showTemplatesSelectionModal()">
+                            <i class="fas fa-plus"></i>
                         </button>
                         <textarea class="chat-input" id="chatInput" placeholder="Введите сообщение..." rows="1"></textarea>
                         <button class="send-btn" onclick="sendChatMessage()">
@@ -5713,6 +6007,7 @@
 
             const newMessage = {
                 sender: 'agent',
+                agentName: 'Анна Волкова (Оператор 1-й линии)',
                 text: chatInput.value,
                 time: new Date()
             };
@@ -6015,6 +6310,137 @@
                 hideModal(deleteArticleModal);
                 hideModal(articleViewerModal);
                 showToast('Статья удалена');
+            }
+        }
+
+        // Templates Functions
+        function filterTemplates() {
+            const search = searchTemplates.value.toLowerCase();
+            filteredTemplates = templates.filter(template => 
+                template.title.toLowerCase().includes(search) ||
+                template.content.toLowerCase().includes(search)
+            );
+            renderTemplates();
+        }
+
+        function renderTemplates() {
+            templatesGrid.innerHTML = filteredTemplates.map(template => `
+                <div class="template-card" onclick="openTemplate(${template.id})">
+                    <div class="template-title"><i class="fas fa-file-lines"></i> ${template.title}</div>
+                    <div class="template-content">${template.content}</div>
+                </div>
+            `).join('');
+        }
+
+        function showNewTemplateModal() {
+            newTemplateTitle.value = '';
+            newTemplateContent.value = '';
+            showModal(newTemplateModal);
+        }
+
+        function createNewTemplate() {
+            const title = newTemplateTitle.value.trim();
+            const content = newTemplateContent.value.trim();
+
+            if (title && content) {
+                const newTemplate = {
+                    id: Math.max(...templates.map(t => t.id)) + 1,
+                    title,
+                    content
+                };
+
+                templates.push(newTemplate);
+                filteredTemplates = [...templates];
+                renderTemplates();
+                saveData();
+                hideModal(newTemplateModal);
+                showToast('Шаблон создан');
+            } else {
+                showToast('Заполните заголовок и текст', true);
+            }
+        }
+
+        function openTemplate(templateId) {
+            currentTemplate = templates.find(t => t.id === templateId);
+            templateEditMode = false;
+            renderTemplateViewer();
+            showModal(editTemplateModal);
+        }
+
+        function renderTemplateViewer() {
+            if (!currentTemplate) return;
+
+            editTemplateTitle.value = currentTemplate.title;
+            editTemplateContent.value = currentTemplate.content;
+
+            if (templateEditMode) {
+                editTemplateModal.querySelector('.modal-title').textContent = 'Редактировать шаблон';
+                saveTemplateBtn.textContent = 'Сохранить';
+            } else {
+                editTemplateModal.querySelector('.modal-title').textContent = 'Просмотр шаблона';
+                saveTemplateBtn.textContent = 'Редактировать';
+            }
+        }
+
+        function saveTemplateChanges() {
+            if (!templateEditMode) {
+                templateEditMode = true;
+                renderTemplateViewer();
+                return;
+            }
+
+            const title = editTemplateTitle.value.trim();
+            const content = editTemplateContent.value.trim();
+
+            if (title && content) {
+                currentTemplate.title = title;
+                currentTemplate.content = content;
+                renderTemplates();
+                saveData();
+                hideModal(editTemplateModal);
+                showToast('Шаблон обновлен');
+            } else {
+                showToast('Заполните заголовок и текст', true);
+            }
+        }
+
+        function showDeleteTemplateModal() {
+            deleteTemplateText.textContent = `Вы уверены, что хотите удалить шаблон "${currentTemplate.title}"?`;
+            showModal(deleteTemplateModal);
+        }
+
+        function deleteTemplate() {
+            const index = templates.findIndex(t => t.id === currentTemplate.id);
+            if (index !== -1) {
+                templates.splice(index, 1);
+                filteredTemplates = [...templates];
+                renderTemplates();
+                saveData();
+                hideModal(deleteTemplateModal);
+                hideModal(editTemplateModal);
+                showToast('Шаблон удален');
+            }
+        }
+
+        function showTemplatesSelectionModal() {
+            templateList.innerHTML = templates.map(template => `
+                <div class="template-item" onclick="selectTemplate(${template.id})">
+                    <div class="template-item-title">${template.title}</div>
+                    <div class="template-item-content">${template.content}</div>
+                </div>
+            `).join('');
+            showModal(templatesSelectionModal);
+        }
+
+        function selectTemplate(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            if (template) {
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.value = template.content;
+                    chatInput.focus();
+                }
+                hideModal(templatesSelectionModal);
             }
         }
 
@@ -6370,6 +6796,7 @@
             localStorage.setItem('smartSupportUsers', JSON.stringify(users));
             localStorage.setItem('smartSupportNotifications', JSON.stringify(notifications));
             localStorage.setItem('smartSupportArticles', JSON.stringify(articles));
+            localStorage.setItem('smartSupportTemplates', JSON.stringify(templates));
         }
 
         // Initialize the app
