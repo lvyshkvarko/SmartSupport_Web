@@ -1,9 +1,3 @@
-Продолжи текущий код, не внося нового функционала которого я не просил и не убирая существующий. Код кидай полный.
-
-В базе знаний сделай выбор штук 10 иконок для статей самых разных, но универсальных подохоядщих по стилистике. При редактировании и создании их можно будет пременить.
-
-В базе знаний сделай кнопку удалить и редактировать одинаковыми. А то удалить слишкуом большая
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -4157,6 +4151,155 @@
             overflow-y: auto;
             max-height: 300px;
         }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ ИКОНОК СТАТЕЙ */
+        .article-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .article-icon-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .article-icon-option {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            background: var(--bg-light);
+            font-size: 20px; /* Увеличиваем размер эмодзи */
+        }
+
+        .article-icon-option:hover {
+            transform: scale(1.1);
+            border-color: var(--primary-color);
+        }
+
+        .article-icon-option.selected {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+        }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ КНОПОК УДАЛЕНИЯ И РЕДАКТИРОВАНИЯ */
+        .article-action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .article-action-btn.edit {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .article-action-btn.delete {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .article-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .article-action-btn.edit:hover {
+            background: var(--primary-dark);
+        }
+
+        .article-action-btn.delete:hover {
+            background: var(--border-color);
+        }
+
+        /* УНИФИКАЦИЯ КНОПОК УДАЛЕНИЯ И РЕДАКТИРОВАНИЯ */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .action-buttons .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-buttons .btn-edit {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .action-buttons .btn-delete {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .action-buttons .btn-edit:hover {
+            background: var(--primary-dark);
+        }
+
+        .action-buttons .btn-delete:hover {
+            background: var(--border-color);
+        }
+
+        /* НОВЫЕ СТИЛИ ДЛЯ РЕДАКТОРА С ЭМОДЗИ И КНОПКОЙ HTML */
+        .editor-btn.html-toggle {
+            font-family: monospace;
+            font-weight: bold;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .editor-btn.html-toggle.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .editor-content.html-mode {
+            font-family: monospace;
+            white-space: pre;
+            background: #f8f8f8;
+            border: 1px solid #e1e1e1;
+        }
+
+        .editor-content.html-mode:focus {
+            outline: 1px solid var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -4749,20 +4892,36 @@
                 <input type="text" class="form-input" id="newArticleTitle" placeholder="Введите заголовок">
             </div>
             <div class="form-group">
+                <label class="form-label">Иконка</label>
+                <div class="article-icon-container" id="articleIconSelection">
+                    <!-- ЗАМЕНА: эмодзи вместо иконок Font Awesome -->
+                    <div class="article-icon-option selected" data-icon="📝">📝</div>
+                    <div class="article-icon-option" data-icon="❓">❓</div>
+                    <div class="article-icon-option" data-icon="⚙️">⚙️</div>
+                    <div class="article-icon-option" data-icon="🔧">🔧</div>
+                    <div class="article-icon-option" data-icon="📊">📊</div>
+                    <div class="article-icon-option" data-icon="🔒">🔒</div>
+                    <div class="article-icon-option" data-icon="💰">💰</div>
+                    <div class="article-icon-option" data-icon="🚀">🚀</div>
+                    <div class="article-icon-option" data-icon="📱">📱</div>
+                    <div class="article-icon-option" data-icon="💻">💻</div>
+                </div>
+            </div>
+            <div class="form-group">
                 <label class="form-label">Содержание</label>
                 <div class="article-edit-container">
                     <div class="editor-toolbar">
-                        <button type="button" class="editor-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                        <button type="button" class="editor-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                        <button type="button" class="editor-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                        <select class="editor-btn" data-command="foreColor">
+                        <button type="button" class="editor-btn" data-command="bold" title="Жирный"><i class="fas fa-bold"></i></button>
+                        <button type="button" class="editor-btn" data-command="italic" title="Курсив"><i class="fas fa-italic"></i></button>
+                        <button type="button" class="editor-btn" data-command="underline" title="Подчеркивание"><i class="fas fa-underline"></i></button>
+                        <select class="editor-btn" data-command="foreColor" title="Цвет текста">
                             <option value="">Цвет</option>
                             <option value="red">Красный</option>
                             <option value="green">Зеленый</option>
                             <option value="blue">Синий</option>
                             <option value="black">Черный</option>
                         </select>
-                        <select class="editor-btn" data-command="fontSize">
+                        <select class="editor-btn" data-command="fontSize" title="Размер шрифта">
                             <option value="">Размер</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -4772,12 +4931,13 @@
                             <option value="6">6</option>
                             <option value="7">7</option>
                         </select>
-                        <button type="button" class="editor-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                        <button type="button" class="editor-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h1">H1</button>
-                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h2">H2</button>
-                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h3">H3</button>
-                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="p">P</button>
+                        <button type="button" class="editor-btn" data-command="insertUnorderedList" title="Маркированный список"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" class="editor-btn" data-command="insertOrderedList" title="Нумерованный список"><i class="fas fa-list-ol"></i></button>
+                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h1" title="Заголовок 1">H1</button>
+                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h2" title="Заголовок 2">H2</button>
+                        <button type="button" class="editor-btn" data-command="formatBlock" data-value="h3" title="Заголовок 3">H3</button>
+                        <!-- ЗАМЕНА: кнопка HTML вместо кнопки P -->
+                        <button type="button" class="editor-btn html-toggle" data-command="toggleHTML" title="Режим HTML">&lt;/&gt;</button>
                     </div>
                     <div class="editor-content" contenteditable="true" id="newArticleContent" placeholder="Введите содержание статьи..."></div>
                 </div>
@@ -4798,7 +4958,7 @@
             <div class="modal-content">
                 <h2 class="modal-title" id="articleViewerTitle"></h2>
                 <div id="articleViewerContent" class="article-content"></div>
-                <div class="article-actions" id="articleViewerActions">
+                <div class="action-buttons" id="articleViewerActions">
                     <!-- Actions will be populated dynamically -->
                 </div>
             </div>
@@ -5033,37 +5193,43 @@
                 id: 1,
                 title: 'Как создать новое обращение',
                 content: '<h2 style="color: var(--primary-color); font-size: 24px;">Создание нового обращения</h2><p><b>Шаг 1:</b> Перейдите в раздел <i>"Обращения"</i>.</p><p><b>Шаг 2:</b> Нажмите кнопку <span style="color: green; font-size: 18px;">"Новое обращение"</span>.</p><ul><li>Введите <span style="font-weight: bold; color: blue;">тему</span></li><li>Напишите <span style="font-style: italic; color: red;">сообщение</span></li><li>Выберите канал и приоритет</li><li>Нажмите <span style="font-size: 20px;">"Создать"</span></li></ul>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '📝'
             },
             {
                 id: 2,
                 title: 'Обработка обращений в дашборде',
                 content: '<h2 style="color: var(--secondary-color); font-size: 22px;">Обработка в дашборде</h2><p>В дашборде вы можете просмотреть <b>статистику</b> и <i>последние обращения</i>.</p><h3 style="color: purple;">Статистика:</h3><ul><li>Всего обращений - <span style="color: green; font-size: 18px;">число</span></li><li>Решено - <span style="color: blue;">число</span></li><li>В ожидании - <span style="color: red; font-style: italic;">число</span></li></ul>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '📊'
             },
             {
                 id: 3,
                 title: 'Использование канбан-доски',
                 content: '<h2 style="font-size: 26px; color: #ff5722;">Канбан-доска</h2><p><b>Перетаскивайте</b> карточки между колонками для <i style="color: teal;">изменения статуса</i>.</p><p>Колонки: <span style="font-weight: bold; color: green;">Новое</span>, <span style="color: blue; font-size: 18px;">В работе</span>, <span style="color: orange;">Ожидание</span>, <span style="color: purple; font-style: italic;">Решено</span>.</p>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '⚙️'
             },
             {
                 id: 4,
                 title: 'Управление пользователями',
                 content: '<h2 style="color: var(--primary-dark); font-size: 20px;">Управление пользователями</h2><p>В разделе <i>"Пользователи"</i> вы можете <b>добавлять</b>, <span style="color: red;">редактировать</span> и удалять пользователей.</p><h3>Роли:</h3><ul><li><span style="font-size: 16px; color: blue;">Оператор 1-й линии</span></li><li>Оператор 2-й линии</li><li><span style="font-weight: bold; color: green;">Администратор</span></li></ul>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '👥'
             },
             {
                 id: 5,
                 title: 'Анализ аналитики',
                 content: '<h2 style="font-size: 24px; color: #4caf50;">Анализ аналитики</h2><p>Раздел <i>"Аналитика"</i> предоставляет <b>статистику</b> по обращениям и каналам.</p><p>Используйте для <span style="color: purple; font-style: italic;">мониторинга</span> эффективности поддержки.</p>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '📈'
             },
             {
                 id: 6,
                 title: 'Настройки системы',
                 content: '<h2 style="color: #2196f3; font-size: 22px;">Настройки системы</h2><p>В настройках вы можете изменить <b>название системы</b>, время ответа и <i style="color: red;">уведомления</i>.</p><h3>Уведомления:</h3><ul><li><span style="font-size: 18px;">Email</span></li><li>Push</li><li><span style="font-weight: bold; color: green;">SMS</span></li></ul>',
-                updated: new Date()
+                updated: new Date(),
+                icon: '🔧'
             }
         ];
 
@@ -5141,6 +5307,7 @@
         let currentTemplate = null;
         let templateToDelete = null;
         let templateEditMode = false;
+        let selectedArticleIcon = '📝';
 
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
@@ -5197,6 +5364,7 @@
         const deleteArticleText = document.getElementById('deleteArticleText');
         const confirmDeleteArticle = document.getElementById('confirmDeleteArticle');
         const cancelDeleteArticle = document.getElementById('cancelDeleteArticle');
+        const articleIconSelection = document.getElementById('articleIconSelection');
         
         // Templates elements
         const searchTemplates = document.getElementById('searchTemplates');
@@ -5281,6 +5449,27 @@
             
             // Setup editor toolbar
             setupEditorToolbar();
+            
+            // Setup article icon selection
+            setupArticleIconSelection();
+        }
+
+        // Setup article icon selection
+        function setupArticleIconSelection() {
+            if (articleIconSelection) {
+                articleIconSelection.addEventListener('click', (e) => {
+                    if (e.target.closest('.article-icon-option')) {
+                        const iconOption = e.target.closest('.article-icon-option');
+                        // Remove selected class from all icons
+                        document.querySelectorAll('.article-icon-option').forEach(icon => {
+                            icon.classList.remove('selected');
+                        });
+                        // Add selected class to clicked icon
+                        iconOption.classList.add('selected');
+                        selectedArticleIcon = iconOption.dataset.icon;
+                    }
+                });
+            }
         }
 
         // Setup editor toolbar functionality
@@ -5293,13 +5482,29 @@
                     
                     // Получаем активный редактор
                     let activeEditor = null;
-                    if (newArticleModal.classList.contains('hidden')) {
-                        activeEditor = document.getElementById('editArticleContent');
-                    } else {
+                    let editorContainer = null;
+                    
+                    if (!newArticleModal.classList.contains('hidden')) {
                         activeEditor = document.getElementById('newArticleContent');
+                        editorContainer = newArticleModal.querySelector('.article-edit-container');
+                    } else if (!articleViewerModal.classList.contains('hidden') && articleEditMode) {
+                        activeEditor = document.getElementById('editArticleContent');
+                        editorContainer = articleViewerModal.querySelector('.article-edit-container');
                     }
                     
                     if (activeEditor && command) {
+                        // Обработка переключения HTML режима
+                        if (command === 'toggleHTML') {
+                            toggleHTMLMode(activeEditor, editorContainer, btn);
+                            return;
+                        }
+                        
+                        // Если активен HTML режим, игнорируем другие команды
+                        if (activeEditor.classList.contains('html-mode')) {
+                            showToast('Переключитесь в визуальный режим для форматирования', true);
+                            return;
+                        }
+                        
                         // Фокусируемся на редакторе перед выполнением команды
                         activeEditor.focus();
                         
@@ -5311,6 +5516,35 @@
                     }
                 }
             });
+        }
+
+        // Функция для переключения HTML режима
+        function toggleHTMLMode(editor, container, button) {
+            if (editor.classList.contains('html-mode')) {
+                // Переключаемся в визуальный режим
+                editor.classList.remove('html-mode');
+                editor.contentEditable = 'true';
+                button.classList.remove('active');
+                
+                // Восстанавливаем нормальное отображение содержимого
+                try {
+                    editor.innerHTML = editor.textContent;
+                } catch (e) {
+                    console.error('Error switching from HTML mode:', e);
+                }
+            } else {
+                // Переключаемся в HTML режим
+                editor.classList.add('html-mode');
+                button.classList.add('active');
+                
+                // Сохраняем HTML содержимое как текст
+                const htmlContent = editor.innerHTML;
+                editor.textContent = htmlContent;
+                editor.contentEditable = 'true';
+            }
+            
+            // Фокусируемся на редакторе
+            editor.focus();
         }
 
         // Update editor buttons state
@@ -6295,8 +6529,16 @@
         function renderArticles() {
             articlesGrid.innerHTML = filteredArticles.map(article => `
                 <div class="article-card" onclick="openArticle(${article.id})">
-                    <div class="article-title"><i class="fas fa-file-alt"></i> ${article.title}</div>
+                    <div class="article-title"><span class="article-icon">${article.icon}</span> ${article.title}</div>
                     <div class="article-excerpt">${stripHtml(article.content).substring(0, 150)}...</div>
+                    <div class="action-buttons">
+                        <button class="btn btn-edit" onclick="editArticle(${article.id}); event.stopPropagation();">
+                            <i class="fas fa-edit"></i> Редактировать
+                        </button>
+                        <button class="btn btn-delete" onclick="showDeleteArticleModal(${article.id}); event.stopPropagation();">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -6311,6 +6553,17 @@
         function showNewArticleModal() {
             newArticleTitle.value = '';
             newArticleContent.innerHTML = '';
+            selectedArticleIcon = '📝';
+            
+            // Reset icon selection
+            document.querySelectorAll('.article-icon-option').forEach(icon => {
+                icon.classList.remove('selected');
+            });
+            // Select first icon by default
+            if (articleIconSelection && articleIconSelection.firstElementChild) {
+                articleIconSelection.firstElementChild.classList.add('selected');
+            }
+            
             showModal(newArticleModal);
             
             // Фокусируемся на заголовке
@@ -6327,7 +6580,9 @@
                 const newArticle = {
                     id: Math.max(...articles.map(a => a.id), 0) + 1,
                     title,
-                    content,
+                    content: newArticleContent.classList.contains('html-mode') ? 
+                            newArticleContent.textContent : content,
+                    icon: selectedArticleIcon,
                     updated: new Date()
                 };
 
@@ -6336,6 +6591,12 @@
                 renderArticles();
                 saveData();
                 hideModal(newArticleModal);
+                
+                // Сбрасываем состояние редактора
+                newArticleContent.classList.remove('html-mode');
+                const htmlBtn = newArticleModal.querySelector('[data-command="toggleHTML"]');
+                if (htmlBtn) htmlBtn.classList.remove('active');
+                
                 showToast('Статья создана');
             } else {
                 showToast('Заполните заголовок и содержание', true);
@@ -6349,32 +6610,63 @@
             showModal(articleViewerModal);
         }
 
+        function editArticle(articleId) {
+            currentArticle = articles.find(a => a.id === articleId);
+            articleEditMode = true;
+            renderArticleViewer();
+            showModal(articleViewerModal);
+            
+            // Убеждаемся, что редактор в визуальном режиме при открытии
+            setTimeout(() => {
+                const editContent = document.getElementById('editArticleContent');
+                const htmlBtn = articleViewerModal.querySelector('[data-command="toggleHTML"]');
+                if (editContent && htmlBtn) {
+                    editContent.classList.remove('html-mode');
+                    htmlBtn.classList.remove('active');
+                }
+            }, 100);
+        }
+
         function renderArticleViewer() {
             if (!currentArticle) return;
 
-            articleViewerTitle.textContent = currentArticle.title;
-
             if (articleEditMode) {
+                articleViewerTitle.innerHTML = `
+                    <input type="text" class="form-input" id="editArticleTitle" value="${currentArticle.title}">
+                `;
+                
                 articleViewerContent.innerHTML = `
                     <div class="form-group">
-                        <label class="form-label">Заголовок</label>
-                        <input type="text" class="form-input" id="editArticleTitle" value="${currentArticle.title}">
+                        <label class="form-label">Иконка</label>
+                        <div class="article-icon-container" id="editArticleIconSelection">
+                            <!-- ЗАМЕНА: эмодзи вместо иконок Font Awesome -->
+                            <div class="article-icon-option ${currentArticle.icon === '📝' ? 'selected' : ''}" data-icon="📝">📝</div>
+                            <div class="article-icon-option ${currentArticle.icon === '❓' ? 'selected' : ''}" data-icon="❓">❓</div>
+                            <div class="article-icon-option ${currentArticle.icon === '⚙️' ? 'selected' : ''}" data-icon="⚙️">⚙️</div>
+                            <div class="article-icon-option ${currentArticle.icon === '🔧' ? 'selected' : ''}" data-icon="🔧">🔧</div>
+                            <div class="article-icon-option ${currentArticle.icon === '📊' ? 'selected' : ''}" data-icon="📊">📊</div>
+                            <div class="article-icon-option ${currentArticle.icon === '🔒' ? 'selected' : ''}" data-icon="🔒">🔒</div>
+                            <div class="article-icon-option ${currentArticle.icon === '💰' ? 'selected' : ''}" data-icon="💰">💰</div>
+                            <div class="article-icon-option ${currentArticle.icon === '🚀' ? 'selected' : ''}" data-icon="🚀">🚀</div>
+                            <div class="article-icon-option ${currentArticle.icon === '📱' ? 'selected' : ''}" data-icon="📱">📱</div>
+                            <div class="article-icon-option ${currentArticle.icon === '💻' ? 'selected' : ''}" data-icon="💻">💻</div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Содержание</label>
                         <div class="article-edit-container">
                             <div class="editor-toolbar">
-                                <button type="button" class="editor-btn" data-command="bold"><i class="fas fa-bold"></i></button>
-                                <button type="button" class="editor-btn" data-command="italic"><i class="fas fa-italic"></i></button>
-                                <button type="button" class="editor-btn" data-command="underline"><i class="fas fa-underline"></i></button>
-                                <select class="editor-btn" data-command="foreColor">
+                                <button type="button" class="editor-btn" data-command="bold" title="Жирный"><i class="fas fa-bold"></i></button>
+                                <button type="button" class="editor-btn" data-command="italic" title="Курсив"><i class="fas fa-italic"></i></button>
+                                <button type="button" class="editor-btn" data-command="underline" title="Подчеркивание"><i class="fas fa-underline"></i></button>
+                                <select class="editor-btn" data-command="foreColor" title="Цвет текста">
                                     <option value="">Цвет</option>
                                     <option value="red">Красный</option>
                                     <option value="green">Зеленый</option>
                                     <option value="blue">Синий</option>
                                     <option value="black">Черный</option>
                                 </select>
-                                <select class="editor-btn" data-command="fontSize">
+                                <select class="editor-btn" data-command="fontSize" title="Размер шрифта">
                                     <option value="">Размер</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -6384,12 +6676,13 @@
                                     <option value="6">6</option>
                                     <option value="7">7</option>
                                 </select>
-                                <button type="button" class="editor-btn" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
-                                <button type="button" class="editor-btn" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
-                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h1">H1</button>
-                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h2">H2</button>
-                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h3">H3</button>
-                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="p">P</button>
+                                <button type="button" class="editor-btn" data-command="insertUnorderedList" title="Маркированный список"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" class="editor-btn" data-command="insertOrderedList" title="Нумерованный список"><i class="fas fa-list-ol"></i></button>
+                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h1" title="Заголовок 1">H1</button>
+                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h2" title="Заголовок 2">H2</button>
+                                <button type="button" class="editor-btn" data-command="formatBlock" data-value="h3" title="Заголовок 3">H3</button>
+                                <!-- ЗАМЕНА: кнопка HTML вместо кнопки P -->
+                                <button type="button" class="editor-btn html-toggle" data-command="toggleHTML" title="Режим HTML">&lt;/&gt;</button>
                             </div>
                             <div class="editor-content" contenteditable="true" id="editArticleContent">${currentArticle.content}</div>
                         </div>
@@ -6400,6 +6693,21 @@
                     <button class="btn-cancel" onclick="toggleArticleEditMode()">Отмена</button>
                 `;
                 
+                // Настройка выбора иконки для редактирования
+                const editIconSelection = document.getElementById('editArticleIconSelection');
+                if (editIconSelection) {
+                    editIconSelection.addEventListener('click', (e) => {
+                        if (e.target.closest('.article-icon-option')) {
+                            const iconOption = e.target.closest('.article-icon-option');
+                            document.querySelectorAll('.article-icon-option').forEach(icon => {
+                                icon.classList.remove('selected');
+                            });
+                            iconOption.classList.add('selected');
+                            currentArticle.icon = iconOption.dataset.icon;
+                        }
+                    });
+                }
+                
                 // Обновляем состояние кнопок редактора
                 setTimeout(() => {
                     const editor = document.getElementById('editArticleContent');
@@ -6408,17 +6716,28 @@
                     }
                 }, 100);
             } else {
+                // Режим просмотра - без изменений
+                articleViewerTitle.innerHTML = `
+                    <span class="article-icon">${currentArticle.icon}</span> ${currentArticle.title}
+                `;
                 articleViewerContent.innerHTML = `
                     <div class="article-content">${currentArticle.content}</div>
                 `;
                 articleViewerActions.innerHTML = `
-                    <button class="btn-secondary" onclick="toggleArticleEditMode()">Редактировать</button>
-                    <button class="btn-confirm" onclick="showDeleteArticleModal()">Удалить</button>
+                    <button class="btn btn-edit" onclick="toggleArticleEditMode()">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </button>
+                    <button class="btn btn-delete" onclick="showDeleteArticleModal()">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
                 `;
             }
         }
 
-        function showDeleteArticleModal() {
+        function showDeleteArticleModal(articleId) {
+            if (articleId) {
+                currentArticle = articles.find(a => a.id === articleId);
+            }
             if (currentArticle) {
                 deleteArticleText.textContent = `Вы уверены, что хотите удалить статью "${currentArticle.title}"?`;
                 showModal(deleteArticleModal);
@@ -6436,7 +6755,8 @@
 
             if (editTitle && editContent && currentArticle) {
                 currentArticle.title = editTitle.value.trim();
-                currentArticle.content = editContent.innerHTML.trim();
+                currentArticle.content = editContent.classList.contains('html-mode') ? 
+                                       editContent.textContent : editContent.innerHTML.trim();
                 currentArticle.updated = new Date();
                 articleEditMode = false;
                 renderArticleViewer();
@@ -6476,6 +6796,14 @@
                 <div class="template-card" onclick="openTemplate(${template.id})">
                     <div class="template-title"><i class="fas fa-file-lines"></i> ${template.title}</div>
                     <div class="template-content">${template.content}</div>
+                    <div class="action-buttons">
+                        <button class="btn btn-edit" onclick="editTemplate(${template.id}); event.stopPropagation();">
+                            <i class="fas fa-edit"></i> Редактировать
+                        </button>
+                        <button class="btn btn-delete" onclick="showDeleteTemplateModal(${template.id}); event.stopPropagation();">
+                            <i class="fas fa-trash"></i> Удалить
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
@@ -6511,6 +6839,13 @@
         function openTemplate(templateId) {
             currentTemplate = templates.find(t => t.id === templateId);
             templateEditMode = false;
+            renderTemplateViewer();
+            showModal(editTemplateModal);
+        }
+
+        function editTemplate(templateId) {
+            currentTemplate = templates.find(t => t.id === templateId);
+            templateEditMode = true;
             renderTemplateViewer();
             showModal(editTemplateModal);
         }
@@ -6552,7 +6887,10 @@
             }
         }
 
-        function showDeleteTemplateModal() {
+        function showDeleteTemplateModal(templateId) {
+            if (templateId) {
+                currentTemplate = templates.find(t => t.id === templateId);
+            }
             deleteTemplateText.textContent = `Вы уверены, что хотите удалить шаблон "${currentTemplate.title}"?`;
             showModal(deleteTemplateModal);
         }
