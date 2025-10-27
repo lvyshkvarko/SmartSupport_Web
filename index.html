@@ -1453,6 +1453,39 @@
             box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
+
+        .send-text {
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            /* On mobile hide the send button text, show only the icon */
+            .send-text {
+                display: none;
+            }
+            /* Make all input row buttons larger on mobile */
+            .chat-input-row .send-btn,
+            .chat-input-row .attach-btn {
+                padding: 12px;
+                min-width: 48px;
+                height: 48px;
+            }
+            
+            /* Add margin to send button to move it slightly right */
+            .chat-input-row .send-btn {
+                margin-left: 12px;
+            }
+            
+            .chat-input-row .send-btn i,
+            .chat-input-row .attach-btn i {
+                font-size: 18px;
+            }
+            
+            /* Move paper plane icon slightly right inside the button */
+            .chat-input-row .send-btn i.fa-paper-plane {
+                margin-left: 2px;
+            }
+        }
         .send-btn {
             padding: 14px 24px;
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
@@ -6054,7 +6087,7 @@
                         <textarea class="chat-input" id="chatInput" placeholder="Введите сообщение..." rows="1"></textarea>
                         <button class="send-btn" onclick="sendChatMessage()">
                             <i class="fas fa-paper-plane"></i>
-                            ${isMobileLandscape ? 'Отпр.' : 'Отправить'}
+                            <span class="send-text">${isMobileLandscape ? 'Отпр.' : 'Отправить'}</span>
                         </button>
                         <input type="file" id="fileInput" class="file-input" multiple>
                     </div>
