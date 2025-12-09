@@ -1563,6 +1563,24 @@
             font-weight: 600;
             font-size: 14px;
         }
+        .technical-task-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+        .kanban-item.has-technical-task {
+            position: relative;
+        }
         /* Analytics Page */
         .analytics-grid {
             display: grid;
@@ -4338,9 +4356,21 @@
             border-bottom: none;
         }
     
+        .theme-option {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+        }
+
+        .theme-option:hover {
+            background: var(--bg-light) !important;
+        }
+
         .theme-option.selected {
-            background: var(--primary-light);
-            border-left: 4px solid var(--primary-color);
+            background: var(--primary-light) !important;
+            border-left: 4px solid var(--primary-color) !important;
+            color: #065f46 !important;
+            font-weight: 600;
         }
         /* Адаптация для мобильных устройств */
         @media (max-width: 768px) {
@@ -4737,6 +4767,12 @@
                         <!-- Status stats will be populated dynamically -->
                     </div>
                 </div>
+                <div class="dashboard-card" id="technicalTasksCard">
+                    <h2 class="card-title"><i class="fas fa-tasks"></i> Технические задания</h2>
+                    <div class="ticket-list" id="technicalTasksList">
+                        <!-- ТЗ будут рендериться динамически -->
+                    </div>
+                </div>
             </div>
         </div>
         <!-- Tickets Page -->
@@ -4811,6 +4847,77 @@
             <h1 class="page-title">Канбан-доска</h1>
             <div class="kanban-container" id="kanbanContainer">
                 <!-- Kanban columns will be populated dynamically -->
+            </div>
+            <!-- Technical Task Modal -->
+            <div id="technicalTaskModal" class="modal-overlay hidden">
+                <div class="modal transfer-modal">  <!-- Добавил класс transfer-modal для похожего оформления -->
+                    <button class="modal-close-btn" onclick="hideModal(document.getElementById('technicalTaskModal'))">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h2 class="modal-title" id="technicalTaskTitle">Техническое задание</h2>
+                    <div class="form-group">
+                        <label class="form-label">Тема ТЗ</label>
+                        <div class="task-themes">
+                            <div class="theme-option" data-theme="Проблема с авторизацией" onclick="selectEditTheme('Проблема с авторизацией')">
+                                Проблема с авторизацией
+                            </div>
+                            <div class="theme-option" data-theme="Ошибка 500" onclick="selectEditTheme('Ошибка 500')">
+                                Ошибка 500
+                            </div>
+                            <div class="theme-option" data-theme="Медленная работа системы" onclick="selectEditTheme('Медленная работа системы')">
+                                Медленная работа системы
+                            </div>
+                            <div class="theme-option" data-theme="Проблема с оплатой" onclick="selectEditTheme('Проблема с оплатой')">
+                                Проблема с оплатой
+                            </div>
+                            <div class="theme-option" data-theme="Ошибка в отчетах" onclick="selectEditTheme('Ошибка в отчетах')">
+                                Ошибка в отчетах
+                            </div>
+                            <div class="theme-option" data-theme="Проблема с загрузкой файлов" onclick="selectEditTheme('Проблема с загрузкой файлов')">
+                                Проблема с загрузкой файлов
+                            </div>
+                            <div class="theme-option" data-theme="Не работает функционал" onclick="selectEditTheme('Не работает функционал')">
+                                Не работает функционал
+                            </div>
+                            <div class="theme-option" data-theme="Ошибка в интерфейсе" onclick="selectEditTheme('Ошибка в интерфейсе')">
+                                Ошибка в интерфейсе
+                            </div>
+                            <div class="theme-option" data-theme="Проблема с интеграцией" onclick="selectEditTheme('Проблема с интеграцией')">
+                                Проблема с интеграцией
+                            </div>
+                            <div class="theme-option" data-theme="Другая техническая проблема" onclick="selectEditTheme('Другая техническая проблема')">
+                                Другая техническая проблема
+                            </div>
+                            <div class="theme-option theme-custom" onclick="enableEditCustomTheme()">
+                                Указать свою тему
+                            </div>
+                        </div>
+                        <input type="text" class="form-input hidden" id="editCustomTheme" placeholder="Введите свою тему">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Краткое описание <span style="color: red;">*</span></label>
+                        <textarea class="form-input" id="editTaskDescription" placeholder="Опишите проблему подробно" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Назначено</label>
+                        <div class="employee-list" id="editTaskEmployeeList">
+                            <!-- Список сотрудников будет заполнен динамически -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Статус</label>
+                        <select class="form-input" id="editTaskStatus">
+                            <option value="new">Новое</option>
+                            <option value="in-progress">В работе</option>
+                            <option value="waiting">Ожидание</option>
+                            <option value="resolved">Решено</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary" onclick="saveTechnicalTaskChanges()">Сохранить</button>
+                        <button class="btn-cancel" onclick="hideModal(document.getElementById('technicalTaskModal'))">Закрыть</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="analyticsPage" class="page-content hidden">
@@ -4998,6 +5105,65 @@
             <div class="modal-actions">
                 <button class="btn-primary" id="confirmAddUser">Добавить</button>
                 <button class="btn-cancel" id="cancelAddUser">Отмена</button>
+            </div>
+        </div>
+    </div>
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ -->
+    <div id="createUserModal" class="modal-overlay hidden">
+        <div class="modal edit-user-modal mobile-optimized">
+            <button class="modal-close-btn" onclick="hideModal(document.getElementById('createUserModal'))">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Создание пользователя</h2>
+            <div class="form-group">
+                <label class="form-label">Аватар</label>
+                <div class="avatar-selection" id="createAvatarSelection">
+                    <div class="avatar-option" data-avatar="👨">👨</div>
+                    <div class="avatar-option" data-avatar="👩">👩</div>
+                    <div class="avatar-option" data-avatar="🧑">🧑</div>
+                    <div class="avatar-option" data-avatar="👨‍💻">👨‍💻</div>
+                    <div class="avatar-option" data-avatar="👩‍💻">👩‍💻</div>
+                    <div class="avatar-option" data-avatar="👨‍🔧">👨‍🔧</div>
+                    <div class="avatar-option" data-avatar="👩‍🔧">👩‍🔧</div>
+                    <div class="avatar-option" data-avatar="👨‍💼">👨‍💼</div>
+                    <div class="avatar-option" data-avatar="👩‍💼">👩‍💼</div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Имя</label>
+                    <input type="text" class="form-input" id="createUserName" placeholder="Введите имя">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Фамилия</label>
+                    <input type="text" class="form-input" id="createUserLastName" placeholder="Введите фамилию">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Логин</label>
+                <input type="text" class="form-input" id="createUserLogin" placeholder="Введите логин">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="createUserEmail" placeholder="Введите email">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Должность</label>
+                <select class="form-input" id="createUserRole">
+                    <option value="operator1">Оператор 1-й линии</option>
+                    <option value="operator2">Оператор 2-й линии</option>
+                    <option value="admin">Администратор</option>
+                    <option value="manager">Руководитель</option>
+                    <option value="developer">Разработчик</option>
+                </select>
+            </div>
+            <div class="password-reset-info">
+                <i class="fas fa-info-circle"></i>
+                После создания пользователя будет сгенерирована ссылка для установки пароля. Отправьте её пользователю.
+            </div>
+            <div class="modal-actions">
+                <button class="btn-primary" id="createUserBtn">Создать пользователя</button>
+                <button class="btn-cancel" onclick="hideModal(document.getElementById('createUserModal'))">Отмена</button>
             </div>
         </div>
     </div>
@@ -5668,6 +5834,8 @@
         let filteredTickets = [...tickets];
         let isMobile = window.innerWidth <= 768;
         let userToEdit = null;
+        let currentTask = null;
+        let currentTaskTicketId = null;
         let notifications = JSON.parse(localStorage.getItem('smartSupportNotifications')) || [
             { id: 1, title: 'Новое обращение', message: 'Пользователь Иван Петров создал новое обращение', time: new Date(Date.now() - 2 * 60 * 60 * 1000), read: false },
             { id: 2, title: 'Изменен статус', message: 'Обращение #2 переведено в статус "В работе"', time: new Date(Date.now() - 5 * 60 * 60 * 1000), read: false },
@@ -5689,6 +5857,10 @@
         let selectedTaskEmployee = null;
         let selectedTheme = null;
         let customThemeEnabled = false;
+    
+        // Переменные для редактирования технических заданий
+        let selectedEditEmployee = null;
+        let selectedEditTheme = null;
     
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
@@ -5724,6 +5896,9 @@
         const usersGrid = document.getElementById('usersGrid');
         const userFilter = document.getElementById('userFilter');
         const addUserBtn = document.getElementById('addUserBtn');
+        // Create User Modal elements
+        const createUserModal = document.getElementById('createUserModal');
+        const createUserBtn = document.getElementById('createUserBtn');
         // Knowledge Base elements
         const searchArticles = document.getElementById('searchArticles');
         const newArticleBtn = document.getElementById('newArticleBtn');
@@ -5800,6 +5975,7 @@
             updateDashboardStats();
             renderRecentTickets();
             renderStatusStats();
+            renderTechnicalTasks();
             renderTicketsList();
             renderKanban();
             renderUsers();
@@ -5810,28 +5986,133 @@
             addCloseButtonToEditModal();
             updateLayout();
             updateNotificationBadge();
-   
+
             // Check for new tickets on load
             checkForNewTickets();
-   
+
             // Save initial data to localStorage
             saveData();
-   
+
             // Setup auto-resize for template textareas
             setupTemplateTextareas();
-   
+
             // Setup editor toolbar
             setupEditorToolbar();
-   
+
             // Setup article icon selection
             setupArticleIconSelection();
-        
+
             // Добавляем классы для мобильной оптимизации
             optimizeModalsForMobile();
+            // Setup create user modal
+            setupCreateUserModal();
             // Добавляем слушатель на изменение роли сотрудника
             const employeeRoleSelect = document.getElementById('employeeRole');
             if (employeeRoleSelect) {
                 employeeRoleSelect.addEventListener('change', populateEmployeeList);
+            }
+            
+            // Setup create user modal
+            setupCreateUserModal();
+        }
+    
+        // Setup create user modal
+        function setupCreateUserModal() {
+            // Avatar selection
+            const createAvatarSelection = document.getElementById('createAvatarSelection');
+            if (createAvatarSelection) {
+                createAvatarSelection.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('avatar-option')) {
+                        document.querySelectorAll('#createAvatarSelection .avatar-option').forEach(avatar => {
+                            avatar.classList.remove('selected');
+                        });
+                        e.target.classList.add('selected');
+                    }
+                });
+                if (createAvatarSelection.firstElementChild) {
+                    createAvatarSelection.firstElementChild.classList.add('selected');
+                }
+            }
+            if (createUserBtn) {
+                createUserBtn.addEventListener('click', createNewUser);
+            }
+            if (createUserModal) {
+                createUserModal.addEventListener('click', (e) => {
+                    if (e.target === createUserModal) hideModal(createUserModal);
+                });
+            }
+        }
+
+        function createNewUser() {
+            const selectedAvatar = document.querySelector('#createAvatarSelection .avatar-option.selected');
+            const avatar = selectedAvatar ? selectedAvatar.dataset.avatar : '👤';
+            const name = document.getElementById('createUserName').value.trim();
+            const lastName = document.getElementById('createUserLastName').value.trim();
+            const login = document.getElementById('createUserLogin').value.trim();
+            const email = document.getElementById('createUserEmail').value.trim();
+            const role = document.getElementById('createUserRole').value;
+
+            if (name && lastName && login && email) {
+                const newUser = {
+                    id: Math.max(...users.map(u => u.id), 0) + 1,
+                    name,
+                    lastName,
+                    login,
+                    email,
+                    role,
+                    status: 'online',
+                    avatar: avatar,
+                    passwordSet: false
+                };
+                users.push(newUser);
+                renderUsers();
+                hideModal(createUserModal);
+                saveData();
+
+                const token = generateToken();
+                const resetLinkValue = `${window.location.origin}/reset-password?token=${token}&user=${newUser.id}&new=true`;
+                showPasswordResetForNewUser(resetLinkValue, newUser);
+                resetCreateUserForm();
+                showToast('Пользователь создан');
+            } else {
+                showToast('Пожалуйста, заполните все поля', true);
+            }
+        }
+
+        function showPasswordResetForNewUser(resetLinkValue, user) {
+            resetLink.textContent = resetLinkValue;
+            copyResetLink.classList.remove('copied');
+            copyResetLink.innerHTML = '<i class="fas fa-copy"></i> Скопировать ссылку';
+            const modalTitle = passwordResetModal.querySelector('.modal-title');
+            const modalText = passwordResetModal.querySelector('.modal p');
+            if (modalTitle) {
+                modalTitle.textContent = 'Ссылка для установки пароля';
+            }
+            if (modalText) {
+                modalText.textContent = `Ссылка для установки пароля сгенерирована. Отправьте её пользователю ${user.name} ${user.lastName}:`;
+            }
+            showModal(passwordResetModal);
+        }
+
+        function resetCreateUserForm() {
+            const nameEl = document.getElementById('createUserName');
+            const lastNameEl = document.getElementById('createUserLastName');
+            const loginEl = document.getElementById('createUserLogin');
+            const emailEl = document.getElementById('createUserEmail');
+            const roleEl = document.getElementById('createUserRole');
+            if (nameEl) nameEl.value = '';
+            if (lastNameEl) lastNameEl.value = '';
+            if (loginEl) loginEl.value = '';
+            if (emailEl) emailEl.value = '';
+            if (roleEl) roleEl.value = 'operator1';
+            const createAvatarSelection = document.getElementById('createAvatarSelection');
+            if (createAvatarSelection) {
+                document.querySelectorAll('#createAvatarSelection .avatar-option').forEach(avatar => {
+                    avatar.classList.remove('selected');
+                });
+                if (createAvatarSelection.firstElementChild) {
+                    createAvatarSelection.firstElementChild.classList.add('selected');
+                }
             }
         }
     
@@ -5996,7 +6277,11 @@
             searchTickets.addEventListener('input', filterTickets);
             newTicketBtn.addEventListener('click', () => showModal(newTicketModal));
             userFilter.addEventListener('change', renderUsers);
-            addUserBtn.addEventListener('click', () => showModal(addUserModal));
+            // Find and update the add user button handler to open new create user modal
+            addUserBtn.addEventListener('click', () => {
+                resetCreateUserForm();
+                showModal(createUserModal);
+            });
             confirmAddUser.addEventListener('click', addNewUser);
             cancelAddUser.addEventListener('click', () => hideModal(addUserModal));
             confirmDeleteUser.addEventListener('click', deleteUser);
@@ -6193,6 +6478,7 @@
                 updateDashboardStats();
                 renderRecentTickets();
                 renderStatusStats();
+                renderTechnicalTasks();
             } else if (page === 'tickets') {
                 renderTicketsList();
             } else if (page === 'kanban') {
@@ -6210,6 +6496,7 @@
             totalTickets.textContent = tickets.length;
             resolvedTickets.textContent = tickets.filter(t => t.status === 'resolved').length;
             pendingTickets.textContent = tickets.filter(t => t.status === 'waiting').length;
+            renderTechnicalTasks();
         }
         function renderRecentTickets() {
             const recent = tickets.slice(0, 3);
@@ -6250,6 +6537,40 @@
                     <span class="status-count">${count}</span>
                 </div>
             `).join('');
+        }
+        function renderTechnicalTasks() {
+            const tasks = JSON.parse(localStorage.getItem('smartSupportTechnicalTasks')) || [];
+            const tasksList = document.getElementById('technicalTasksList');
+            if (!tasksList) return;
+
+            // Сортируем по дате создания (новые сверху)
+            const sortedTasks = [...tasks].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            tasksList.innerHTML = sortedTasks.map(task => {
+                const ticket = tickets.find(t => t.id === task.ticketId);
+                const ticketSubject = ticket ? ticket.subject : 'Обращение не найдено';
+                return `
+                    <div class="ticket-item" onclick="switchPage('tickets'); setTimeout(() => selectTicket(${task.ticketId}), 100)">
+                        <div class="ticket-header">
+                            <div class="ticket-subject">${task.theme}</div>
+                            <div class="priority-badge priority-low">ТЗ #${task.id}</div>
+                        </div>
+                        <p class="ticket-message">${task.description}</p>
+                        <div class="ticket-footer">
+                            <span class="ticket-user">Назначено: ${task.assignedTo}</span>
+                            <span class="ticket-time">${getTimeAgo(task.createdAt)}</span>
+                        </div>
+                        <div class="ticket-footer" style="margin-top: 8px;">
+                            <span class="ticket-user">Связанное обращение: ${ticketSubject}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Если нет ТЗ, покажи placeholder
+            if (tasks.length === 0) {
+                tasksList.innerHTML = '<p style="text-align: center; color: var(--text-medium);">Нет активных ТЗ</p>';
+            }
         }
         // Tickets Functions
         function filterTickets() {
@@ -6560,6 +6881,8 @@
                 document.getElementById('employeeTransferForm').classList.add('active');
             } else if (option === 'task') {
                 document.getElementById('taskTransferForm').classList.add('active');
+                // Загрузить список сотрудников для ТЗ
+                populateTaskEmployeeList();
             }
         }
     
@@ -6572,7 +6895,9 @@
         
             // Добавить опцию "Случайный сотрудник"
             const randomEmployeeItem = document.createElement('div');
-            randomEmployeeItem.className = 'employee-item random-employee';
+            // Проверяем, является ли "Случайный сотрудник" текущим выбранным
+            const isRandomSelected = selectedEmployee === null || selectedEmployee === undefined;
+            randomEmployeeItem.className = `employee-item random-employee ${isRandomSelected ? 'selected' : ''}`;
             randomEmployeeItem.innerHTML = `
                 <div class="employee-name">Случайный сотрудник</div>
                 <div class="employee-role">Будет выбран автоматически</div>
@@ -6584,16 +6909,26 @@
             // Добавить сотрудников выбранной роли
             const roleUsers = users.filter(user => user.role === selectedRole);
             roleUsers.forEach(user => {
+                // Проверяем, что поля существуют и не пустые
+                const userFirstName = user.name || '';
+                const userLastName = user.lastName || '';
+                // Проверяем, является ли этот сотрудник текущим выбранным
+                const isSelected = !isRandomSelected && selectedEmployee === user.id;
                 const employeeItem = document.createElement('div');
-                employeeItem.className = 'employee-item';
+                employeeItem.className = `employee-item ${isSelected ? 'selected' : ''}`;
                 employeeItem.innerHTML = `
-                    <div class="employee-name">${user.name} ${user.lastName}</div>
+                    <div class="employee-name">${userFirstName} ${userLastName}</div>
                     <div class="employee-role">${roleLabels[user.role]}</div>
                 `;
                 employeeItem.dataset.employeeId = user.id;
                 employeeItem.onclick = () => selectEmployee(user.id, 'employee');
                 employeeList.appendChild(employeeItem);
             });
+            
+            // Убедимся, что при первом отображении "Случайный сотрудник" выделен, если никто не выбран
+            if (isRandomSelected) {
+                selectEmployee(null, 'employee');
+            }
         }
     
         // Функция заполнения списка сотрудников для ТЗ
@@ -6604,7 +6939,9 @@
         
             // Добавить опцию "Случайный сотрудник"
             const randomEmployeeItem = document.createElement('div');
-            randomEmployeeItem.className = 'employee-item random-employee';
+            // Если ранее не был выбран сотрудник, по умолчанию выбираем "Случайный"
+            const isRandomSelected = selectedTaskEmployee === null || selectedTaskEmployee === undefined;
+            randomEmployeeItem.className = `employee-item ${isRandomSelected ? 'selected' : ''}`;
             randomEmployeeItem.innerHTML = `
                 <div class="employee-name">Случайный сотрудник</div>
                 <div class="employee-role">Будет выбран автоматически</div>
@@ -6619,11 +6956,16 @@
                 const roleUsers = users.filter(user => user.role === role);
                 if (roleUsers.length > 0) {
                     roleUsers.forEach(user => {
+                        // Проверяем, что поля существуют и не пустые
+                        const userFirstName = user.name || '';
+                        const userLastName = user.lastName || '';
+                        // Проверяем, является ли этот сотрудник выбранным
+                        const isSelected = !isRandomSelected && selectedTaskEmployee === user.id;
                         const employeeItem = document.createElement('div');
-                        employeeItem.className = 'employee-item';
+                        employeeItem.className = `employee-item ${isSelected ? 'selected' : ''}`;
                         employeeItem.innerHTML = `
-                            <div class="employee-name">${user.name} ${user.lastName}</div>
-                            <div class="employee-role">${roleLabels[user.role]}</div>
+                            <div class="employee-name">${userFirstName} ${userLastName}</div>
+                            <div class="employee-role">${roleLabels[user.role] || user.role}</div>
                         `;
                         employeeItem.dataset.employeeId = user.id;
                         employeeItem.onclick = () => selectEmployee(user.id, 'task');
@@ -6631,67 +6973,345 @@
                     });
                 }
             });
-        }
-    
-        // Функция выбора сотрудника
-        function selectEmployee(employeeId, type) {
-            if (type === 'employee') {
-                selectedEmployee = employeeId;
             
-                // Снять выделение со всех сотрудников
-                document.querySelectorAll('#employeeList .employee-item').forEach(item => {
-                    item.classList.remove('selected');
-                });
-            
-                // Выделить выбранного сотрудника
-                const selector = employeeId === null ? '.random-employee' : `.employee-item[data-employee-id="${employeeId}"]`;
-                document.querySelector(`#employeeList ${selector}`).classList.add('selected');
-            } else if (type === 'task') {
-                selectedTaskEmployee = employeeId;
-            
-                // Снять выделение со всех сотрудников
-                document.querySelectorAll('#taskEmployeeList .employee-item').forEach(item => {
-                    item.classList.remove('selected');
-                });
-            
-                // Выделить выбранного сотрудника
-                const selector = employeeId === null ? '.random-employee' : `.employee-item[data-employee-id="${employeeId}"]`;
-                document.querySelector(`#taskEmployeeList ${selector}`).classList.add('selected');
+            // Убедимся, что при первом отображении "Случайный сотрудник" выделен, если никто не выбран
+            if (isRandomSelected) {
+                selectEmployee(null, 'task');
             }
         }
     
-        // Функция выбора темы
+        // Функция выбора сотрудника
+       function selectEmployee(employeeId, type) {
+           if (type === 'employee') {
+               selectedEmployee = employeeId;
+           
+               // Снять выделение со всех сотрудников
+               document.querySelectorAll('#employeeList .employee-item').forEach(item => {
+                   item.classList.remove('selected');
+               });
+           
+               // Выделить выбранного сотрудника
+               if (employeeId === null) {
+                   const randomEmployee = document.querySelector('#employeeList .random-employee');
+                   if (randomEmployee) {
+                       randomEmployee.classList.add('selected');
+                       // Также снимаем выделение с других элементов в списке
+                       document.querySelectorAll('#employeeList .employee-item:not(.random-employee)').forEach(item => {
+                           item.classList.remove('selected');
+                       });
+                   }
+               } else {
+                   const selector = `.employee-item[data-employee-id="${employeeId}"]`;
+                   const element = document.querySelector(`#employeeList ${selector}`);
+                   if (element) {
+                       element.classList.add('selected');
+                       // Снимаем выделение с элемента "Случайный сотрудник"
+                       const randomEmployee = document.querySelector('#employeeList .random-employee');
+                       if (randomEmployee) randomEmployee.classList.remove('selected');
+                   }
+               }
+           } else if (type === 'task') {
+               selectedTaskEmployee = employeeId;
+           
+               // Снять выделение со всех сотрудников
+               const allTaskEmployeeItems = document.querySelectorAll('#taskEmployeeList .employee-item, #editTaskEmployeeList .employee-item');
+               allTaskEmployeeItems.forEach(item => {
+                   item.classList.remove('selected');
+               });
+           
+               // Выделить выбранного сотрудника
+               if (employeeId === null) {
+                   // Проверяем оба контейнера для сотрудников задачи
+                   const randomEmployee1 = document.querySelector('#taskEmployeeList .random-employee');
+                   const randomEmployee2 = document.querySelector('#editTaskEmployeeList .random-employee');
+                   if (randomEmployee1) {
+                       randomEmployee1.classList.add('selected');
+                       // Снимаем выделение с других элементов
+                       document.querySelectorAll('#taskEmployeeList .employee-item:not(.random-employee)').forEach(item => {
+                           item.classList.remove('selected');
+                       });
+                   }
+                   if (randomEmployee2) {
+                       randomEmployee2.classList.add('selected');
+                       // Снимаем выделение с других элементов
+                       document.querySelectorAll('#editTaskEmployeeList .employee-item:not(.random-employee)').forEach(item => {
+                           item.classList.remove('selected');
+                       });
+                   }
+               } else {
+                   // Проверяем оба контейнера для сотрудников задачи
+                   const selector = `.employee-item[data-employee-id="${employeeId}"]`;
+                   const element1 = document.querySelector(`#taskEmployeeList ${selector}`);
+                   const element2 = document.querySelector(`#editTaskEmployeeList ${selector}`);
+                   if (element1) {
+                       element1.classList.add('selected');
+                       // Снимаем выделение с элемента "Случайный сотрудник"
+                       const randomEmployee1 = document.querySelector('#taskEmployeeList .random-employee');
+                       if (randomEmployee1) randomEmployee1.classList.remove('selected');
+                   }
+                   if (element2) {
+                       element2.classList.add('selected');
+                       // Снимаем выделение с элемента "Случайный сотрудник"
+                       const randomEmployee2 = document.querySelector('#editTaskEmployeeList .random-employee');
+                       if (randomEmployee2) randomEmployee2.classList.remove('selected');
+                   }
+               }
+           }
+       }
+    
+        // Функция выбора темы в форме передачи обращения
         function selectTheme(theme) {
             selectedTheme = theme;
             customThemeEnabled = false;
-        
-            // Снять выделение со всех тем
-            document.querySelectorAll('.theme-option').forEach(item => {
+
+            // Находим контейнер тем в активной форме передачи
+            const taskForm = document.getElementById('taskTransferForm');
+            if (!taskForm) return;
+
+            // Снять выделение со всех тем только в активной форме
+            const allThemes = taskForm.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
                 item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
             });
-        
+
             // Выделить выбранную тему
-            document.querySelector(`.theme-option[data-theme="${theme}"]`).classList.add('selected');
-        
+            const selectedThemeElement = taskForm.querySelector(`.theme-option[data-theme="${theme}"]`);
+            if (selectedThemeElement) {
+                selectedThemeElement.classList.add('selected');
+                selectedThemeElement.style.backgroundColor = 'var(--primary-light)';
+                selectedThemeElement.style.borderLeft = '4px solid var(--primary-color)';
+                selectedThemeElement.style.color = '#065f46';
+            }
+
             // Скрыть поле для своей темы
-            document.getElementById('customTheme').classList.add('hidden');
+            const customThemeInput = taskForm.querySelector('#customTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.add('hidden');
+                customThemeInput.value = '';
+            }
         }
-    
-        // Функция включения своей темы
+
+        // Функция включения своей темы в форме передачи обращения
         function enableCustomTheme() {
             customThemeEnabled = true;
-        
-            // Снять выделение со всех тем
-            document.querySelectorAll('.theme-option').forEach(item => {
+            selectedTheme = null;
+
+            // Находим контейнер тем в активной форме передачи
+            const taskForm = document.getElementById('taskTransferForm');
+            if (!taskForm) return;
+
+            // Снять выделение со всех тем только в активной форме
+            const allThemes = taskForm.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
                 item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
             });
-        
+
             // Выделить опцию своей темы
-            document.querySelector('.theme-custom').classList.add('selected');
-        
+            const customThemeOption = taskForm.querySelector('.theme-custom');
+            if (customThemeOption) {
+                customThemeOption.classList.add('selected');
+                customThemeOption.style.backgroundColor = 'var(--primary-light)';
+                customThemeOption.style.borderLeft = '4px solid var(--primary-color)';
+                customThemeOption.style.color = '#065f46';
+            }
+
             // Показать поле для своей темы
-            document.getElementById('customTheme').classList.remove('hidden');
-            document.getElementById('customTheme').focus();
+            const customThemeInput = taskForm.querySelector('#customTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.remove('hidden');
+                customThemeInput.focus();
+            }
+        }
+
+        // Функция выбора темы в форме редактирования ТЗ
+        function selectEditTheme(theme) {
+            selectedEditTheme = theme;
+
+            // Находим контейнер тем в модальном окне редактирования ТЗ
+            const editModal = document.getElementById('technicalTaskModal');
+            if (!editModal) return;
+
+            // Снять выделение со всех тем только в этом модальном окне
+            const allThemes = editModal.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            // Выделить выбранную тему
+            const selectedThemeElement = editModal.querySelector(`.theme-option[data-theme="${theme}"]`);
+            if (selectedThemeElement) {
+                selectedThemeElement.classList.add('selected');
+                selectedThemeElement.style.backgroundColor = 'var(--primary-light)';
+                selectedThemeElement.style.borderLeft = '4px solid var(--primary-color)';
+                selectedThemeElement.style.color = '#065f46';
+            }
+
+            // Скрыть поле для своей темы
+            const customThemeInput = editModal.querySelector('#editCustomTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.add('hidden');
+                customThemeInput.value = '';
+            }
+        }
+
+        // Функция включения своей темы в форме редактирования ТЗ
+        function enableEditCustomTheme() {
+            selectedEditTheme = null;
+
+            // Находим контекст редактирования ТЗ
+            const editModal = document.getElementById('technicalTaskModal');
+            if (!editModal) return;
+
+            // Снять выделение со всех тем только в этом модальном окне
+            const allThemes = editModal.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            // Выделить опцию своей темы
+            const customThemeOption = editModal.querySelector('.theme-custom');
+            if (customThemeOption) {
+                customThemeOption.classList.add('selected');
+                customThemeOption.style.backgroundColor = 'var(--primary-light)';
+                customThemeOption.style.borderLeft = '4px solid var(--primary-color)';
+                customThemeOption.style.color = '#065f46';
+            }
+
+            // Показать поле для своей темы
+            const customThemeInput = editModal.querySelector('#editCustomTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.remove('hidden');
+                customThemeInput.focus();
+            }
+        }
+
+        // Функция для сброса выделения тем в форме редактирования
+        function clearEditThemeSelection() {
+            const editModal = document.getElementById('technicalTaskModal');
+            if (!editModal) return;
+
+            const allThemes = editModal.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            document.getElementById('editCustomTheme').classList.add('hidden');
+            document.getElementById('editCustomTheme').value = '';
+        }
+
+        // Обновляем функцию showTransferModal для правильного сброса состояния
+        function showTransferModal() {
+            if (!currentTicket) return;
+            
+            // Сброс состояния
+            selectedTransferOption = null;
+            selectedEmployee = null;
+            selectedTaskEmployee = null;
+            selectedTheme = null;
+            customThemeEnabled = false;
+
+            // Сброс выделения тем в форме передачи
+            const taskForm = document.getElementById('taskTransferForm');
+            if (taskForm) {
+                const allThemes = taskForm.querySelectorAll('.theme-option');
+                allThemes.forEach(item => {
+                    item.classList.remove('selected');
+                    item.style.backgroundColor = '';
+                    item.style.borderLeft = '';
+                    item.style.color = '';
+                });
+            }
+
+            // Скрыть все формы
+            document.getElementById('employeeTransferForm').classList.remove('active');
+            document.getElementById('taskTransferForm').classList.remove('active');
+
+            // Показать опции выбора
+            document.getElementById('transferOptions').style.display = 'flex';
+
+            // Снять выделение с опций передачи
+            document.querySelectorAll('.transfer-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Скрыть поля для своей темы
+            document.getElementById('customTheme').classList.add('hidden');
+            document.getElementById('customTheme').value = '';
+
+            // Очистить поля
+            document.getElementById('taskDescription').value = '';
+
+            // Заполнить списки сотрудников
+            populateEmployeeList();
+            populateTaskEmployeeList();
+
+            // Установить дефолтные выделения
+            selectEmployee(null, 'employee');
+            selectEmployee(null, 'task');
+
+            showModal(document.getElementById('transferTicketModal'));
+        }
+
+        // Обновляем функцию selectTransferOption для сброса состояния тем при переключении
+        function selectTransferOption(option) {
+            selectedTransferOption = option;
+
+            // Выделить выбранную опцию
+            document.querySelectorAll('.transfer-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`.transfer-option[data-option="${option}"]`).classList.add('selected');
+
+            // Скрыть опции выбора
+            document.getElementById('transferOptions').style.display = 'none';
+
+            // Сбросить состояние тем при переключении на опцию ТЗ
+            if (option === 'task') {
+                selectedTheme = null;
+                customThemeEnabled = false;
+                
+                const taskForm = document.getElementById('taskTransferForm');
+                if (taskForm) {
+                    const allThemes = taskForm.querySelectorAll('.theme-option');
+                    allThemes.forEach(item => {
+                        item.classList.remove('selected');
+                        item.style.backgroundColor = '';
+                        item.style.borderLeft = '';
+                        item.style.color = '';
+                    });
+                    
+                    // Скрыть поле для своей темы
+                    const customThemeInput = taskForm.querySelector('#customTheme');
+                    if (customThemeInput) {
+                        customThemeInput.classList.add('hidden');
+                        customThemeInput.value = '';
+                    }
+                }
+            }
+
+            // Показать соответствующую форму
+            if (option === 'employee') {
+                document.getElementById('employeeTransferForm').classList.add('active');
+            } else if (option === 'task') {
+                document.getElementById('taskTransferForm').classList.add('active');
+                // Загрузить список сотрудников для ТЗ
+                populateTaskEmployeeList();
+            }
         }
     
         // Функция передачи обращения сотруднику
@@ -6778,7 +7398,9 @@
         
             // Сохраняем ТЗ (в реальной системе это бы сохранялось в БД)
             saveTechnicalTask(technicalTask);
-        
+            renderTechnicalTasks();
+            renderKanban();
+
             // Добавляем системное сообщение в чат
             const systemMessage = {
                 sender: 'system',
@@ -7127,6 +7749,7 @@
                 { status: 'waiting', title: 'Ожидание' },
                 { status: 'resolved', title: 'Решено' }
             ];
+            const tasks = JSON.parse(localStorage.getItem('smartSupportTechnicalTasks')) || [];
             kanbanContainer.innerHTML = columns.map(column => {
                 const columnTickets = tickets.filter(t => t.status === column.status);
                 return `
@@ -7136,11 +7759,15 @@
                                 <h3 class="kanban-title">${column.title} (${columnTickets.length})</h3>
                             </div>
                             <div class="kanban-content">
-                                ${columnTickets.map(ticket => `
-                                    <div class="kanban-item" draggable="true" ondragstart="dragTicket(event, ${ticket.id})">
-                                        <div class="kanban-subject">${ticket.subject}</div>
-                                    </div>
-                                `).join('')}
+                                ${columnTickets.map(ticket => {
+                                    const hasTask = tasks.some(t => t.ticketId === ticket.id);
+                                    return `
+                                        <div class="kanban-item ${hasTask ? 'has-technical-task' : ''}" draggable="true" ondragstart="dragTicket(event, ${ticket.id})" onclick="openTicketDialog(${ticket.id})">
+                                            <div class="kanban-subject">${ticket.subject}</div>
+                                            ${hasTask ? '<div class="technical-task-indicator"><i class="fas fa-tasks"></i></div>' : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     </div>
@@ -7165,18 +7792,493 @@
                     renderStatusStats();
                     renderTicketsList();
                     saveData();
-           
+
                     // Update current ticket if it's the one being dragged
                     if (currentTicket && currentTicket.id === draggedTicket) {
                         currentTicket = ticket;
                         renderChatView();
                     }
-           
+
                     showToast(`Статус обращения изменен на "${statusLabels[newStatus]}"`);
                 }
                 draggedTicket = null;
             }
         }
+        function openTicketDialog(ticketId) {
+            const ticket = tickets.find(t => t.id === ticketId);
+            if (!ticket) return;
+
+            currentTaskTicketId = ticketId;
+            currentTask = null;
+
+            // Проверяем, есть ли ТЗ для этого обращения
+            const tasks = JSON.parse(localStorage.getItem('smartSupportTechnicalTasks')) || [];
+            const hasTask = tasks.some(t => t.ticketId === ticketId);
+
+            // Показываем диалог выбора: открыть обращение или ТЗ
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal">
+                    <button class="modal-close-btn" onclick="this.closest('.modal-overlay').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <h2 class="modal-title">Выберите действие</h2>
+                    <div class="transfer-options">
+                        <div class="transfer-option" onclick="openTicket(${ticketId}); this.closest('.modal-overlay').remove()">
+                            <div class="transfer-option-header">
+                                <div class="transfer-option-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <div class="transfer-option-title">Открыть обращение</div>
+                            </div>
+                            <div class="transfer-option-description">
+                                Просмотреть диалог с пользователем
+                            </div>
+                        </div>
+                        ${hasTask ? `
+                        <div class="transfer-option" onclick="openTechnicalTask(${ticketId}); this.closest('.modal-overlay').remove()">
+                            <div class="transfer-option-header">
+                                <div class="transfer-option-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="transfer-option-title">Открыть техническое задание</div>
+                            </div>
+                            <div class="transfer-option-description">
+                                Просмотреть и редактировать ТЗ
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        function openTicket(ticketId) {
+            switchPage('tickets');
+            setTimeout(() => selectTicket(ticketId), 100);
+        }
+        function openTechnicalTask(ticketId) {
+            const tasks = JSON.parse(localStorage.getItem('smartSupportTechnicalTasks')) || [];
+            const task = tasks.find(t => t.ticketId === ticketId);
+
+            if (!task) {
+                // Если ТЗ нет, показываем модал в режиме создания
+                currentTask = null;
+                currentTaskTicketId = ticketId;
+
+                document.getElementById('technicalTaskTitle').textContent = 'Новое техническое задание';
+
+                // Сбрасываем все выделения тем
+                clearEditThemeSelection();
+
+                // Сбрасываем описание
+                document.getElementById('editTaskDescription').value = '';
+                document.getElementById('editTaskDescription').placeholder = 'Опишите проблему подробно (обязательно)';
+
+                // Загружаем список сотрудников с выделением "Случайный сотрудник" по умолчанию
+                loadEditTaskEmployees(null);
+
+                // Устанавливаем статус по умолчанию
+                document.getElementById('editTaskStatus').value = 'new';
+
+                showModal(document.getElementById('technicalTaskModal'));
+                
+                // Принудительно обновляем выделение после показа модального окна
+                setTimeout(() => {
+                    const employeeList = document.getElementById('editTaskEmployeeList');
+                    if (employeeList) {
+                        const randomEmployee = employeeList.querySelector('.employee-item:first-child');
+                        if (randomEmployee) {
+                            randomEmployee.classList.add('selected');
+                            randomEmployee.style.backgroundColor = 'var(--primary-light)';
+                            randomEmployee.style.borderLeft = '4px solid var(--primary-color)';
+                            randomEmployee.style.color = '#065f46';
+                        }
+                    }
+                }, 100);
+                
+                return;
+            }
+
+            currentTask = task;
+            currentTaskTicketId = ticketId;
+
+            document.getElementById('technicalTaskTitle').textContent = 'Редактирование технического задания';
+
+            // Сбрасываем все выделения тем
+            clearEditThemeSelection();
+
+            // Устанавливаем тему из задачи
+            if (task.theme) {
+                const standardThemes = [
+                    'Проблема с авторизацией', 'Ошибка 500', 'Медленная работа системы',
+                    'Проблема с оплатой', 'Ошибка в отчетах', 'Проблема с загрузкой файлов',
+                    'Не работает функционал', 'Ошибка в интерфейсе', 'Проблема с интеграцией',
+                    'Другая техническая проблема'
+                ];
+
+                if (standardThemes.includes(task.theme)) {
+                    selectEditTheme(task.theme);
+                } else {
+                    document.getElementById('editCustomTheme').value = task.theme;
+                    enableEditCustomTheme();
+                }
+            }
+
+            // Заполняем описание
+            document.getElementById('editTaskDescription').value = task.description;
+
+            // Загружаем сотрудников с правильным выделением
+            loadEditTaskEmployees(task.assignedTo);
+
+            // Устанавливаем статус
+            const ticket = tickets.find(t => t.id === ticketId);
+            const actualStatus = ticket ? ticket.status : task.status;
+            document.getElementById('editTaskStatus').value = actualStatus || task.status || 'new';
+
+            showModal(document.getElementById('technicalTaskModal'));
+            
+            // Принудительно обновляем выделение после показа модального окна
+            setTimeout(() => {
+                const employeeList = document.getElementById('editTaskEmployeeList');
+                if (employeeList) {
+                    // Снимаем выделение со всех
+                    const allEmployees = employeeList.querySelectorAll('.employee-item');
+                    allEmployees.forEach(item => {
+                        item.classList.remove('selected');
+                        item.style.backgroundColor = '';
+                        item.style.borderLeft = '';
+                        item.style.color = '';
+                    });
+                    
+                    // Выделяем выбранного сотрудника
+                    const selectedEmployeeName = selectedEditEmployee || 'Случайный сотрудник';
+                    const employeeItems = employeeList.querySelectorAll('.employee-item');
+                    for (let item of employeeItems) {
+                        const nameElement = item.querySelector('.employee-name');
+                        if (nameElement && nameElement.textContent.trim() === selectedEmployeeName.trim()) {
+                            item.classList.add('selected');
+                            item.style.backgroundColor = 'var(--primary-light)';
+                            item.style.borderLeft = '4px solid var(--primary-color)';
+                            item.style.color = '#065f46';
+                            break;
+                        }
+                    }
+                }
+            }, 100);
+        }
+        function saveTechnicalTaskChanges() {
+            // Получаем тему - сначала проверяем кастомную, потом выбранную
+            let theme = document.getElementById('editCustomTheme').value.trim();
+            if (!theme) {
+                theme = selectedEditTheme;
+            }
+
+            const description = document.getElementById('editTaskDescription').value.trim();
+            const status = document.getElementById('editTaskStatus').value;
+            const assignedTo = selectedEditEmployee || "Случайный сотрудник";
+
+            // Проверяем обязательные поля
+            if (!theme) {
+                showToast('Выберите тему ТЗ', true);
+                return;
+            }
+
+            if (!description) {
+                showToast('Введите описание проблемы', true);
+                return;
+            }
+
+            const tasks = JSON.parse(localStorage.getItem('smartSupportTechnicalTasks')) || [];
+
+            if (currentTask) {
+                // Обновляем существующее ТЗ
+                currentTask.theme = theme;
+                currentTask.description = description;
+                currentTask.status = status;
+                currentTask.assignedTo = assignedTo;
+
+                const taskIndex = tasks.findIndex(t => t.id === currentTask.id);
+                if (taskIndex !== -1) {
+                    tasks[taskIndex] = currentTask;
+                }
+                
+                // Обновляем статус связанного тикета
+                if (currentTask.ticketId) {
+                    const ticket = tickets.find(t => t.id === currentTask.ticketId);
+                    if (ticket) {
+                        ticket.status = status;
+                        ticket.updated = new Date();
+                    }
+                }
+            } else {
+                // Создаем новое ТЗ
+                const newTask = {
+                    id: 'TZ-' + Date.now(),
+                    ticketId: currentTaskTicketId,
+                    theme: theme,
+                    description: description,
+                    assignedTo: assignedTo,
+                    createdAt: new Date(),
+                    status: status
+                };
+                tasks.push(newTask);
+                
+                // Обновляем статус связанного тикета
+                if (currentTaskTicketId) {
+                    const ticket = tickets.find(t => t.id === currentTaskTicketId);
+                    if (ticket) {
+                        ticket.status = status;
+                        ticket.updated = new Date();
+                    }
+                }
+            }
+
+            localStorage.setItem('smartSupportTechnicalTasks', JSON.stringify(tasks));
+
+            // Обновляем UI
+            renderKanban();
+            renderTechnicalTasks();
+            renderTicketsList();
+            updateDashboardStats();
+            renderStatusStats();
+            renderRecentTickets();
+            
+            // Если текущий тикет открыт в чате, обновляем его
+            if (currentTicket && currentTask && currentTicket.id === currentTask.ticketId) {
+                renderChatView();
+            }
+
+            hideModal(document.getElementById('technicalTaskModal'));
+            showToast('Изменения сохранены');
+        }
+
+        // Technical Task Edit Functions
+        function selectEditTheme(theme) {
+            selectedEditTheme = theme;
+
+            // Находим контейнер тем в модальном окне редактирования ТЗ
+            const editModal = document.getElementById('technicalTaskModal');
+            if (!editModal) return;
+
+            // Снять выделение со всех тем только в этом модальном окне
+            const allThemes = editModal.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            // Выделить выбранную тему
+            const selectedThemeElement = editModal.querySelector(`.theme-option[data-theme="${theme}"]`);
+            if (selectedThemeElement) {
+                selectedThemeElement.classList.add('selected');
+                selectedThemeElement.style.backgroundColor = 'var(--primary-light)';
+                selectedThemeElement.style.borderLeft = '4px solid var(--primary-color)';
+                selectedThemeElement.style.color = '#065f46';
+            }
+
+            // Скрыть поле для своей темы
+            const customThemeInput = editModal.querySelector('#editCustomTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.add('hidden');
+                customThemeInput.value = '';
+            }
+        }
+
+        function clearSelectedEditTheme() {
+            selectedEditTheme = null;
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.getElementById('editCustomTheme').classList.add('hidden');
+        }
+
+        function getSelectedEditTheme() {
+            const customTheme = document.getElementById('editCustomTheme').value.trim();
+            if (customTheme) return customTheme;
+            return selectedEditTheme;
+        }
+
+        function enableEditCustomTheme() {
+            selectedEditTheme = null;
+
+            // Находим контекст редактирования ТЗ
+            const editModal = document.getElementById('technicalTaskModal');
+            if (!editModal) return;
+
+            // Снять выделение со всех тем только в этом модальном окне
+            const allThemes = editModal.querySelectorAll('.theme-option');
+            allThemes.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            // Выделить опцию своей темы
+            const customThemeOption = editModal.querySelector('.theme-custom');
+            if (customThemeOption) {
+                customThemeOption.classList.add('selected');
+                customThemeOption.style.backgroundColor = 'var(--primary-light)';
+                customThemeOption.style.borderLeft = '4px solid var(--primary-color)';
+                customThemeOption.style.color = '#065f46';
+            }
+
+            // Показать поле для своей темы
+            const customThemeInput = editModal.querySelector('#editCustomTheme');
+            if (customThemeInput) {
+                customThemeInput.classList.remove('hidden');
+                customThemeInput.focus();
+            }
+        }
+
+        // Обновленная функция загрузки сотрудников для редактирования ТЗ
+        function loadEditTaskEmployees(selectedEmployee) {
+            const employeeList = document.getElementById('editTaskEmployeeList');
+            if (!employeeList) return;
+
+            employeeList.innerHTML = '';
+
+            // Добавляем опцию "Случайный сотрудник" всегда первой
+            const randomEmployeeItem = document.createElement('div');
+            // Проверяем, является ли текущий выбранный сотрудник "Случайным"
+            const isRandomSelected = selectedEmployee === null || selectedEmployee === undefined ||
+                                   selectedEmployee === '' || selectedEmployee === 'Случайный сотрудник';
+            
+            randomEmployeeItem.className = `employee-item ${isRandomSelected ? 'selected' : ''}`;
+            randomEmployeeItem.innerHTML = `
+                <div class="employee-name">Случайный сотрудник</div>
+                <div class="employee-role">Будет выбран автоматически</div>
+            `;
+            
+            // Применяем стили выделения если выбран
+            if (isRandomSelected) {
+                randomEmployeeItem.style.backgroundColor = 'var(--primary-light)';
+                randomEmployeeItem.style.borderLeft = '4px solid var(--primary-color)';
+                randomEmployeeItem.style.color = '#065f46';
+            }
+            
+            randomEmployeeItem.onclick = () => selectEditEmployee(null);
+            employeeList.appendChild(randomEmployeeItem);
+
+            // Добавляем всех сотрудников
+            users.forEach(user => {
+                const userFirstName = user.name || '';
+                const userLastName = user.lastName || '';
+                const employeeName = `${userFirstName} ${userLastName}`.trim();
+                
+                // Проверяем, соответствует ли этот сотрудник выбранному
+                const isSelected = !isRandomSelected && employeeName === selectedEmployee;
+                const employeeItem = document.createElement('div');
+                employeeItem.className = `employee-item ${isSelected ? 'selected' : ''}`;
+                employeeItem.innerHTML = `
+                    <div class="employee-name">${userFirstName} ${userLastName}</div>
+                    <div class="employee-role">${roleLabels[user.role] || user.role}</div>
+                `;
+                
+                // Применяем стили выделения если выбран
+                if (isSelected) {
+                    employeeItem.style.backgroundColor = 'var(--primary-light)';
+                    employeeItem.style.borderLeft = '4px solid var(--primary-color)';
+                    employeeItem.style.color = '#065f46';
+                }
+                
+                employeeItem.onclick = () => selectEditEmployee(employeeName);
+                employeeList.appendChild(employeeItem);
+            });
+
+            // Обновляем глобальную переменную
+            selectedEditEmployee = isRandomSelected ? null : selectedEmployee;
+        }
+
+        // Исправленная функция выбора сотрудника в форме редактирования ТЗ
+        function selectEditEmployee(employeeName) {
+            selectedEditEmployee = employeeName;
+
+            // Находим контейнер сотрудников в модальном окне редактирования
+            const employeeList = document.getElementById('editTaskEmployeeList');
+            if (!employeeList) return;
+
+            // Снять выделение со всех сотрудников только в этом контейнере
+            const allEmployees = employeeList.querySelectorAll('.employee-item');
+            allEmployees.forEach(item => {
+                item.classList.remove('selected');
+                item.style.backgroundColor = '';
+                item.style.borderLeft = '';
+                item.style.color = '';
+            });
+
+            // Выделить выбранного сотрудника
+            if (employeeName === null) {
+                // Ищем элемент "Случайный сотрудник" в текущем контейнере
+                const randomEmployee = employeeList.querySelector('.employee-item:first-child');
+                if (randomEmployee) {
+                    randomEmployee.classList.add('selected');
+                    randomEmployee.style.backgroundColor = 'var(--primary-light)';
+                    randomEmployee.style.borderLeft = '4px solid var(--primary-color)';
+                    randomEmployee.style.color = '#065f46';
+                }
+            } else {
+                // Ищем сотрудника по имени в текущем контейнере
+                const employeeItems = employeeList.querySelectorAll('.employee-item');
+                for (let item of employeeItems) {
+                    const nameElement = item.querySelector('.employee-name');
+                    if (nameElement && nameElement.textContent.trim() === employeeName.trim()) {
+                        item.classList.add('selected');
+                        item.style.backgroundColor = 'var(--primary-light)';
+                        item.style.borderLeft = '4px solid var(--primary-color)';
+                        item.style.color = '#065f46';
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Обновленная функция загрузки сотрудников для редактирования ТЗ
+        function getSelectedEditEmployee() {
+            return selectedEditEmployee;
+        }
+
+        // Добавляем обработчик событий для модального окна редактирования ТЗ
+        document.addEventListener('DOMContentLoaded', function() {
+            const technicalTaskModal = document.getElementById('technicalTaskModal');
+            if (technicalTaskModal) {
+                // Обработчик события при открытии модального окна
+                technicalTaskModal.addEventListener('click', function(e) {
+                    // Если клик по элементу сотрудника, обновляем выделение
+                    if (e.target.closest('.employee-item')) {
+                        const employeeItem = e.target.closest('.employee-item');
+                        const employeeName = employeeItem.querySelector('.employee-name').textContent;
+                        
+                        // Снимаем выделение со всех
+                        const allEmployees = technicalTaskModal.querySelectorAll('.employee-item');
+                        allEmployees.forEach(item => {
+                            item.classList.remove('selected');
+                            item.style.backgroundColor = '';
+                            item.style.borderLeft = '';
+                            item.style.color = '';
+                        });
+                        
+                        // Выделяем текущий
+                        employeeItem.classList.add('selected');
+                        employeeItem.style.backgroundColor = 'var(--primary-light)';
+                        employeeItem.style.borderLeft = '4px solid var(--primary-color)';
+                        employeeItem.style.color = '#065f46';
+                        
+                        // Обновляем выбранного сотрудника
+                        if (employeeName === 'Случайный сотрудник') {
+                            selectedEditEmployee = null;
+                        } else {
+                            selectedEditEmployee = employeeName;
+                        }
+                    }
+                });
+            }
+        });
+
         // Knowledge Base Functions
         function filterArticles() {
             const search = searchArticles.value.toLowerCase();
@@ -7957,3 +9059,4 @@
     </script>
 </body>
 </html>
+
